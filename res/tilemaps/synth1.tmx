@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="14" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="foreground2" tilewidth="32" tileheight="32" spacing="2" margin="2">
+  <image source="test-tilemap-tilesheet.png" width="640" height="400"/>
+  <tile id="0">
+   <properties>
+    <property name="name" value="grass"/>
+    <property name="solid" value="false"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="name" value="grass"/>
+    <property name="solid" value="false"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="name" value="dirt"/>
+    <property name="solid" value="false"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="name" value="dirt"/>
+    <property name="solid" value="false"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="name" value="road"/>
+    <property name="solid" value="false"/>
+   </properties>
+  </tile>
+  <tile id="5">
+   <properties>
+    <property name="name" value="road"/>
+    <property name="solid" value="false"/>
+   </properties>
+  </tile>
+  <tile id="6">
+   <properties>
+    <property name="movement" value="solid"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="movement" value="road"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="name" value="house"/>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="name" value="house"/>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="name" value="house"/>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="37">
+   <properties>
+    <property name="name" value="house"/>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="price" value="200000"/>
+   </properties>
+  </tile>
+  <tile id="39">
+   <properties>
+    <property name="price" value="225000"/>
+   </properties>
+  </tile>
+  <tile id="40">
+   <properties>
+    <property name="price" value="250000"/>
+   </properties>
+  </tile>
+  <tile id="41">
+   <properties>
+    <property name="price" value="300000"/>
+   </properties>
+  </tile>
+  <tile id="42">
+   <properties>
+    <property name="price" value="325000"/>
+   </properties>
+  </tile>
+  <tile id="43">
+   <properties>
+    <property name="price" value="350000"/>
+   </properties>
+  </tile>
+  <tile id="44">
+   <properties>
+    <property name="price" value="375000"/>
+   </properties>
+  </tile>
+  <tile id="45">
+   <properties>
+    <property name="price" value="400000"/>
+   </properties>
+  </tile>
+  <tile id="46">
+   <properties>
+    <property name="price" value="425000"/>
+   </properties>
+  </tile>
+  <tile id="47">
+   <properties>
+    <property name="price" value="450000"/>
+   </properties>
+  </tile>
+  <tile id="48">
+   <properties>
+    <property name="price" value="475000"/>
+   </properties>
+  </tile>
+  <tile id="49">
+   <properties>
+    <property name="price" value="500000"/>
+   </properties>
+  </tile>
+  <tile id="50">
+   <properties>
+    <property name="price" value="550000"/>
+   </properties>
+  </tile>
+  <tile id="51">
+   <properties>
+    <property name="price" value="625000"/>
+   </properties>
+  </tile>
+  <tile id="52">
+   <properties>
+    <property name="price" value="700000"/>
+   </properties>
+  </tile>
+  <tile id="53">
+   <properties>
+    <property name="price" value="1000000"/>
+   </properties>
+  </tile>
+  <tile id="56">
+   <properties>
+    <property name="loan" value="350000"/>
+    <property name="name" value="steve"/>
+    <property name="preferredColor" value="red"/>
+   </properties>
+  </tile>
+  <tile id="57">
+   <properties>
+    <property name="loan" value="400000"/>
+   </properties>
+  </tile>
+  <tile id="58">
+   <properties>
+    <property name="loan" value="450000"/>
+   </properties>
+  </tile>
+  <tile id="59">
+   <properties>
+    <property name="loan" value="800000"/>
+   </properties>
+  </tile>
+  <tile id="60">
+   <properties>
+    <property name="loan" value="1000000"/>
+   </properties>
+  </tile>
+  <tile id="61">
+   <properties>
+    <property name="loan" value="300000"/>
+   </properties>
+  </tile>
+  <tile id="72">
+   <properties>
+    <property name="physics" value="solid"/>
+   </properties>
+  </tile>
+  <tile id="73">
+   <properties>
+    <property name="physics" value="empty"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="background" width="25" height="14">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NkYGBgAmJGGtK0NHvUjlE7Ru0YtWOo2QEAqsfQx3gFAAA=
+  </data>
+ </layer>
+ <layer name="foreground" width="25" height="14">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NkYGBgRMOsUIwuTgqGmcFGQJ5Uc5mQMC3sYEJj09ofpIQVE5mYHnaQElbUwrS2A5c/RvEophQDACoO4/l4BQAA
+  </data>
+ </layer>
+ <layer name="signs" width="25" height="14">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA5NiYGCQGsWjeBSP4lFMNwwA0IEB9XgFAAA=
+  </data>
+ </layer>
+ <layer name="customers" width="25" height="14">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA5NiYGCQwoEtgdgKiK2RsBUWtg0Q26Kpx2UmNjvwYSscdtmRaAe6PyyxmIlNHTl2YHMrun+Q1ZFjBzaz0e0gNz6I8Qc2TKwdo3gUj3QMANLn9X54BQAA
+  </data>
+ </layer>
+ <layer name="physics" width="25" height="14">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA/NkYGDwpAP2oiEeSDsI2UuK/HAPK2qG3WDyBy3sGE1XA2sHrTEAEafHH3gFAAA=
+  </data>
+ </layer>
+</map>
