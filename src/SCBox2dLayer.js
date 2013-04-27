@@ -56,10 +56,10 @@ var SCBox2dLayer = cc.Layer.extend({
         var listener = new Box2D.Dynamics.b2ContactListener;
         listener.BeginContact = function(contact) {
          	//this.handleCollision(contact);
-         	 cc.log("SCBox2DLayer listener.BeginContact() body A = ");
-         	 cc.log(contact.GetFixtureA().GetBody().GetUserData());  
-         	 cc.log("SCBox2DLayer listener.BeginContact() body B = ");
-         	 cc.log(contact.GetFixtureB().GetBody().GetUserData());
+         	 //cc.log("SCBox2DLayer listener.BeginContact() body A = ");
+         	// cc.log(contact.GetFixtureA().GetBody().GetUserData());  
+         	// cc.log("SCBox2DLayer listener.BeginContact() body B = ");
+         	// cc.log(contact.GetFixtureB().GetBody().GetUserData());
          	 
          	 var gameConfig = new SCGameConfig();
          	 
@@ -67,14 +67,14 @@ var SCBox2dLayer = cc.Layer.extend({
          	 var userDataB = contact.GetFixtureB().GetBody().GetUserData();
          	 
          	 if(userDataA && userDataA.ID == gameConfig.globals.TAG_PLAYER){
-	         	 cc.log("userDataA.ID == TAG_PLAYER");
+	         	// cc.log("userDataA.ID == TAG_PLAYER");
 	         	 if(userDataB){
 	         	 	userDataB.playNote = true;
 	         	 	}
          	 }
          	 
          	 if(userDataB && userDataB.ID == gameConfig.globals.TAG_PLAYER){
-	         	 cc.log("userDataB.ID == TAG_PLAYER");
+	         	 //cc.log("userDataB.ID == TAG_PLAYER");
 	         	 if(userDataA){
 	         	 	userDataA.playNote = true;
 	         	 	}
@@ -95,7 +95,7 @@ var SCBox2dLayer = cc.Layer.extend({
         this.addChild(mgr, 0, TAG_SPRITE_MANAGER);
 
         //Set up sprite for testing adding a sprite attached to a BOX2D shape (square for now)
-        this.addNewSpriteWithCoords(cc.p(screenSize.width / 2, screenSize.height / 2));
+        //this.addNewSpriteWithCoords(cc.p(screenSize.width / 2, screenSize.height / 2));
         
         
         // add a physics debug draw visualization in a seperate canvas
@@ -308,7 +308,8 @@ var SCBox2dLayer = cc.Layer.extend({
         var b2BodyDef = Box2D.Dynamics.b2BodyDef
             , b2Body = Box2D.Dynamics.b2Body
             , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
-            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
+            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            , b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
 
         var bodyDef = new b2BodyDef();
         bodyDef.type = b2Body.b2_dynamicBody;
@@ -317,14 +318,18 @@ var SCBox2dLayer = cc.Layer.extend({
         var body = this.world.CreateBody(bodyDef);
 
         // Define another box shape for our dynamic body.
-        var dynamicBox = new b2PolygonShape();
-        dynamicBox.SetAsBox(0.5, 0.5);//These are mid points for our 1m box
+       // var dynamicBox = new b2PolygonShape();
+        //dynamicBox.SetAsBox(0.5, 0.5);//These are mid points for our 1m box
+        var dynamicCircle = new b2CircleShape(.5);
+       // dynamicCircle.SetAsCircle(0.5, 0.5);
 
         // Define the dynamic body fixture.
         var fixtureDef = new b2FixtureDef();
-        fixtureDef.shape = dynamicBox;
-        fixtureDef.density = 1.0;
+       // fixtureDef.shape = dynamicBox;
+       fixtureDef.shape = dynamicCircle;
+        fixtureDef.density = 0.1;
         fixtureDef.friction = 0.3;
+        fixtureDef.restitution = .98;
         body.CreateFixture(fixtureDef);
 
     },
@@ -387,6 +392,52 @@ var SCBox2dLayer = cc.Layer.extend({
 		
 	   	    
     },
+    
+    shoot:function(target, origin){
+	    
+	    var p = cc.p(origin.x - this.getPosition().x, origin.y - this.getPosition().y);
+	    
+	    
+	    var b2Vec2 = Box2D.Common.Math.b2Vec2;
+	    var b2Transform = Box2D.Common.Math.b2Transform;
+	    var b2Mat22 = Box2D.Common.Math.b2Mat22;
+	    
+	    for (var b = this.world.GetBodyList(); b; b = b.GetNext()) {
+            if (b.GetUserData() != null) {
+                
+                var myActor = b.GetUserData();
+                
+                
+                // if it is the projectile/player object
+                if(myActor.ID && myActor.ID == this.gameConfig.globals.TAG_PLAYER){
+                	              	
+                	        var pos = new b2Vec2(p.x / this.gameConfig.Box2dLayer.PTM_RATIO, p.y / this.gameConfig.Box2dLayer.PTM_RATIO);
+                	        var angle = 0;
+                	        var transform = new b2Transform();
+                	        cc.log(pos.x);
+                	        //transform.Set(new b2Vec2(100,100), angle);
+                			//b.SetTransform(new b2Transform(new b2Vec2(3,3), b.GetAngle()));
+                			b.SetTransform(new b2Transform(pos, new b2Mat22(0) ));
+                			
+	                		cc.log("SCBox2DLayer shoot()");
+	                		//var force = new b2Vec2(2,10);
+	                		var force = new b2Vec2((target.x-origin.x)/100,(target.y-origin.y)/100)
+	                		cc.log("SCBox2DLayer shoot() vel.x/y = " + force.x + " " + force.y);
+	                		b.SetAwake(true);
+	                		b.SetLinearVelocity(force);
+	                		b.SetAngle(0);
+	                		b.SetAngularVelocity(0);
+	                	
+	                	
+	                
+	             }
+	            myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
+                myActor.setRotation(-1 * cc.RADIANS_TO_DEGREES(b.GetAngle()));
+            }
+           }
+	    
+    },
+    
     update:function (dt) {
         //It is recommended that a fixed time step is used with Box2D for stability
         //of the simulation, however, we are using a variable time step here.
@@ -409,7 +460,7 @@ var SCBox2dLayer = cc.Layer.extend({
                 var myActor = b.GetUserData();
                 
                 if(myActor.playNote == true && myActor.note){
-	                cc.log("SCBox2DLayer update() ActorID = " + myActor.ID + " note = " + myActor.note);
+	                //cc.log("SCBox2DLayer update() ActorID = " + myActor.ID + " note = " + myActor.note);
 	                this.synth.playNote(myActor.note);
 	                myActor.playNote = false;
                 }
@@ -417,10 +468,10 @@ var SCBox2dLayer = cc.Layer.extend({
                 // if it is the player -- needs to be moved to player entity
                 if(myActor.ID && myActor.ID == this.gameConfig.globals.TAG_PLAYER){
                 	
-                	b.SetAwake(true);
-                	b.SetAngle(0);
-                	b.SetAngularVelocity(0);
-                	
+                	//b.SetAwake(true);
+                	//b.SetAngle(0);
+                	//b.SetAngularVelocity(0);
+                	/*
                 	if(myActor.state && myActor.state.movementDirection){
                 		//cc.log("SCBox2DLayer update() myActor.state.movementDirection = " + myActor.state.movementDirection);
                 		if(myActor.state.movementDirection == "up"){
@@ -451,6 +502,7 @@ var SCBox2dLayer = cc.Layer.extend({
 	                		b.SetLinearVelocity(force);
 	                	
 	                	}
+	                	*/
 	                }
 	             }
 	            myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));

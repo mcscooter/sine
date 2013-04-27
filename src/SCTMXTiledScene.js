@@ -10,6 +10,7 @@ var SCTileLayer = cc.Layer.extend({
         this.setTouchEnabled(true);
         this.setKeyboardEnabled(true);
         this.gameConfig = new SCGameConfig();
+        this.iosSoundInitialized = false;
     },
 
     // run when SCTileLayer is created
@@ -69,12 +70,13 @@ var SCTileLayer = cc.Layer.extend({
     	player.setPosition(this.gameConfig.player.startPosition);
     	player.setID(this.gameConfig.globals.TAG_PLAYER);
     	entities.push(player);
-    	physicsEntities.push(player);
-    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewEntity(cc.p(192,300),player);
+    	//physicsEntities.push(player);
+    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewEntity(this.gameConfig.player.startPosition,player);
     	//this.gameLayer.addChild(player, 99, this.gameConfig.globals.TAG_PLAYER);
        	//physicsLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
        	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
        	
+       	/*
        	// Make a car entity
     	// Since SCCar extends a CCSprite (SCEntity), we start with a texture. Could be a 1px transparent image if an invisible sprite is needed.
         var carEntity = new SCCar(this.gameConfig.greenCar.greenCarRight, this.gameConfig.greenCar.baseTextureRect);     
@@ -84,6 +86,8 @@ var SCTileLayer = cc.Layer.extend({
     	physicsEntities.push(carEntity);
     	//this.gameLayer.addChild(carEntity, 100, this.gameConfig.globals.TAG_CAR_ENTITY);
     	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewEntity(cc.p(200,200),carEntity);
+       	*/
+       	
        	
        	this.timer = new SCTimer();
        	this.timer.setPosition(this.gameConfig.timer.position);
@@ -106,7 +110,7 @@ var SCTileLayer = cc.Layer.extend({
         entities.push(this.sign);
        	this.HUDLayer.addChild(this.sign, 96, this.gameConfig.globals.TAG_PRICE);
        
-    
+    /*
        	// Register callbacks
      	var mapTouchEventCallback = function(testArg){player.mapTouched(testArg);};
        	var mapTouchEvent = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP));
@@ -119,7 +123,7 @@ var SCTileLayer = cc.Layer.extend({
        	var playerMovedCameraEvent = new SCEvent(this.gameConfig.globals.MSG_PLAYER_MOVED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_CAMERA));
        	var playerMovedCameraListener = new SCListener(playerMovedCameraEvent, playerMovedCameraCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_CAMERA));
        //	this.mediator.register(playerMovedCameraListener); // turn back on to have camera move
-       	
+       	*/
        	var inputHandlerStateEventCallback = function(args){player.inputChanged(args);};
        	var inputHandleStateEvent = new SCEvent(this.gameConfig.globals.MSG_INPUT_CHANGED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER));
        	var inputHandlerStateEventListener = new SCListener(inputHandleStateEvent, inputHandlerStateEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER));
@@ -162,8 +166,11 @@ var SCTileLayer = cc.Layer.extend({
         cc.Director.getInstance().getTouchDispatcher().addTargetedDelegate(this, 0, true);
     },
     onTouchBegan:function (touch, event) {
-	    this.synth.playNote(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 127)));
-	    this.synth.changeLowPassFilterFrequency(Math.abs(Math.floor(touch.getLocation().x / cc.Director.getInstance().getWinSize().width * 12000)));
+    	if(this.iosSoundInitialized == false){
+	    	this.synth.playNote(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 127)));
+	    	this.synth.changeLowPassFilterFrequency(Math.abs(Math.floor(touch.getLocation().x / cc.Director.getInstance().getWinSize().width * 12000)));
+	    	this.iosSoundInitialized = true;
+	    	}
         return true; // set this if you want to claim the touch
     },
     
@@ -182,69 +189,16 @@ var SCTileLayer = cc.Layer.extend({
     	var tileTouchedX = Math.floor(mapTouchLocation.x / tileSize.width);
     	var tileTouchedY = Math.floor(mapSize.height - mapTouchLocation.y / tileSize.height); // Because Tiled maps register in the top left corner rather than bottom left
     	var tileCoord = cc.p(tileTouchedX, tileTouchedY);
-    	/*
-    	var signProperties = tileMap.getPointProperties("signs", mapTouchLocation);
-    	var customerProperties = tileMap.getPointProperties("customers", mapTouchLocation);
     	
-    	if(customerProperties){
-	    	this.customer.setLoan(customerProperties.loan);
-	    	tileMap.removeCustomer(tileCoord);
-    	}
-    	
-    	if(signProperties){
-	    	this.sign.setPrice(signProperties.price);
-	    	if(parseInt(this.customer.loan) >= parseInt(this.sign.price)){
-	    		this.score.score += parseInt(this.sign.getPrice());
-		    	tileMap.removeSign(tileCoord);
-		    	this.customer.loan = 0;
-	    	}	
-    	}
-    	*/
-    	/*
-    	// send touch event
-    	var touchArgs = new Object();
-    	touchArgs.touchLocation = touchLocation
-    	touchArgs.mapTouchLocation = mapTouchLocation;
-    	var touchEvent = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this, touchArgs);
-       	this.mediator.send(touchEvent);
-    	*/
-    	// send touch event to mediator
-    	// test sending an arbitrary object to the mediator to be sent to the callback
-    	//var args = new Object();
-    	//args.touchLocation = touchLocation;
-    	//args.mapTouchLocation = mapTouchLocation;
-    	//var event = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
-       	//this.mediator.send(event);
-       	//var event2 = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
-       	//this.mediator.send(event2);
-       	
-       	//this.gameLayer.getChildByTag(this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER)).move(mapTouchLocation);
-       	
-       	
-       	
-       	
-       	// Test adding an entity to the physics world
-       	// doesn't currently work
-       //	var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
-    	//player.setPosition(this.gameConfig.player.startPosition);
-    	//player.setID(this.gameConfig.globals.TAG_PLAYER);
-       	//player.setTexture(this.gameConfig.player.carRight);
-       	// add this back for testing adding a physics shape
-       	//this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoords(cc.p(touchLocation.x - this.gameLayer.getPosition().x, touchLocation.y - this.gameLayer.getPosition().y ));
-
-       	// a test for updating the physics shapes in the world
-       	// will eventually call this when the game screen has moved enough or state has otherwise changed that would cause a need to update.
-       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getPhysicsUpdateWindow(this.gameLayer.getPosition(), tileMap);
-       	
-       	//this.testWebAudioSynth();  	
+    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).shoot(touchLocation, this.gameConfig.player.startPosition);	
     
     },
     onTouchCancelled:function (touch, event) {
     },
     prevLocation:null,
     onTouchMoved:function (touch, event) {
-	     this.synth.changeNoteFrequency(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 127)));
-	     this.synth.changeLowPassFilterFrequency(Math.abs(Math.floor(touch.getLocation().x / cc.Director.getInstance().getWinSize().width * 12000)));
+	    // this.synth.changeNoteFrequency(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 127)));
+	    // this.synth.changeLowPassFilterFrequency(Math.abs(Math.floor(touch.getLocation().x / cc.Director.getInstance().getWinSize().width * 12000)));
     },
     
     // Keyboard handling

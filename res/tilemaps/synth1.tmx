@@ -210,7 +210,7 @@
  </tileset>
  <layer name="physics" width="25" height="14">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA/NkYGDwpAP2oiEm1w5S9OCyA13cG4qx2YFNzpMMOwYirEgJO2LtQFdDiO8zSPxBj/igR7qiJGxoGSaDwQ5aYwAZ7iYmeAUAAA==
+   H4sIAAAAAAAAA/NkYGDwpAP2oiEetWNg7fBBwqN2DHx8jNpBuR20xgDYvgAheAUAAA==
   </data>
  </layer>
 </map>
