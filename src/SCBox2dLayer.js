@@ -34,7 +34,7 @@ var SCBox2dLayer = cc.Layer.extend({
         this.gameConfig = new SCGameConfig();        
     },
     
-    init:function(){
+    initWithMap:function(map){
         var b2Vec2 = Box2D.Common.Math.b2Vec2
             , b2BodyDef = Box2D.Dynamics.b2BodyDef
             , b2Body = Box2D.Dynamics.b2Body
@@ -58,6 +58,12 @@ var SCBox2dLayer = cc.Layer.extend({
          }
          this.world.SetContactListener(listener);
        
+        // take tile map and make physics shapes.
+        this.makeTiles(map, true, cc.p(-100,-110), cc.p(30,20));
+       
+
+
+        
         // this is the test graphic for 
         var mgr = cc.SpriteBatchNode.create(s_pathBlock, 150);
         this.addChild(mgr, 0, TAG_SPRITE_MANAGER);
@@ -77,7 +83,111 @@ var SCBox2dLayer = cc.Layer.extend({
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
 			this.world.SetDebugDraw(debugDraw);
 		}
+			
+			
+			
+		/* //currently doesn't work on cc2d HTML5 2.1. To reactivate also have to override draw() function and include this.world.DrawDebugData();
+		// Also, could try transforming this layer to see if it changes the view
+		// attempt to draw debug using Cocos2D
+		//set up debug draw
+        var debugDraw = new b2DebugDraw();
+        debugDraw.SetSprite(cc.renderContext);
+        debugDraw.SetDrawScale(this.gameConfig.Box2dLayer.PTM_RATIO);
+        debugDraw.SetFillAlpha(0.3);
+        debugDraw.SetLineThickness(1.0);
+        debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit | b2DebugDraw.e_centerOfMassBit);
+        this.world.SetDebugDraw(debugDraw);
+        */
+
+        //this.scheduleUpdate();
+   
+        
         cc.log("Box2DTest Finished CTOR");
+
+    },
+    
+    
+    // Create rigid bodies from tile map.
+    // If joinX or Y are true, ake longer shapes on when consecutive tiles are solid.
+    //
+    //		Might need to reverse #'s for Y since tileMaps have Y inverted (y=0 is top of map)
+    makeTiles:function(map, joinX, bottomLeft, topRight){
+	    var b2Vec2 = Box2D.Common.Math.b2Vec2
+            , b2BodyDef = Box2D.Dynamics.b2BodyDef
+            , b2Body = Box2D.Dynamics.b2Body
+            , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+            , b2World = Box2D.Dynamics.b2World
+            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
+	        	 	
+        	
+        // Start creating the tile world rigid bodies
+        var fixDef = new b2FixtureDef;
+        fixDef.density = this.gameConfig.Box2dLayer.tileBox.density;
+        fixDef.friction = this.gameConfig.Box2dLayer.tileBox.friction;
+        fixDef.restitution = this.gameConfig.Box2dLayer.tileBox.restitution;
+
+        var bodyDef = new b2BodyDef;
+
+        //create standard tile body
+        bodyDef.type = b2Body.b2_staticBody;
+        fixDef.shape = new b2PolygonShape;
+        fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
+
+
+        // check draw area for being within the tile map
+        if(bottomLeft.x<0){
+	        bottomLeft.x = 0;
+        }
+        if(topRight.y>map.getMapSize().height){
+        	//cc.log("SCBox2DLayer makeTiles topRight.y > map");
+	        topRight.y = map.getMapSize().height;
+	        //cc.log("SCBox2DLayer makeTiles topRight.y = " + topRight.y);
+        }
+        if(topRight.x>map.getMapSize().width){
+        	//cc.log("SCBox2DLayer makeTiles topRight.x > map");
+	        topRight.x = map.getMapSize().width;
+	        //cc.log("SCBox2DLayer makeTiles topRight.x = " + topRight.x);
+        }
+        if(bottomLeft.y<0){
+	        bottomLeft.y = 0;
+        }
+        
+        
+        // i=y, j=x. Might need to reverse #'s for Y since tileMaps have Y inverted (y=0 is top of map)
+	     for(var i=bottomLeft.y; i<topRight.y; i++){
+	        for(var j=bottomLeft.x; j<topRight.x; j++){
+		       // if there is no tile or no proper tile properties, there will be errors unless you run checks first.
+		       var tileProps = map.getTileProperties("physics", cc.p(j,i));
+		       if(tileProps){
+			       if(tileProps.physics && tileProps.physics == "solid"){
+			       	fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
+			       	var pos = cc.p(j, i);
+			       	// join consecutive horizontal tiles if desired
+			       	if(joinX == true){
+			       		j++;
+			       		var shapeWidth = this.gameConfig.Box2dLayer.tileBox.diameter;
+			       		while(j<topRight.x){
+				       		tileProps = map.getTileProperties("physics", cc.p(j,i));
+				       		if(tileProps && tileProps.physics && tileProps.physics == "solid"){
+				       			shapeWidth += this.gameConfig.Box2dLayer.tileBox.diameter;
+					       		fixDef.shape.SetAsBox(shapeWidth, this.gameConfig.Box2dLayer.tileBox.center);
+					       		pos = cc.p(pos.x + this.gameConfig.Box2dLayer.tileBox.center, pos.y);
+					       	}else{
+					       		break;
+					       	}
+				       		j++;
+				       	}
+			       	}
+			       	// Attach body to world
+			       	bodyDef.position.Set(pos.x + this.gameConfig.Box2dLayer.tileBox.center, pos.y + this.gameConfig.Box2dLayer.tileBox.center);
+				   	this.world.CreateBody(bodyDef).CreateFixture(fixDef);    
+			       }
+			       
+		       }
+	        }
+        }
+	    
     },
 
     addNewSpriteWithCoords:function (p) {
@@ -169,6 +279,64 @@ var SCBox2dLayer = cc.Layer.extend({
 
     },
     
+     getPhysicsUpdateWindow:function(worldPosition, tileMap){
+	    cc.log("SCBox2DLayer getPhysicsUpdateWindow()");
+	    cc.log("SCBox2DLayer getPhysicsUpdateWindow() worldPosition.x/y = " + worldPosition.x + " " + worldPosition.y);
+	    /*
+	    var touchLocation = touch.getLocation();
+    	var tileMap = this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP);
+    	var layer = tileMap.getLayer("foreground");
+    	var tileSize = tileMap.getTileSize();
+    	var mapSize = tileMap.getMapSize();
+    	var mapLocation = tileMap.getPosition();
+    	var mapTouchLocation = tileMap.convertTouchToNodeSpace(touch);
+    	var tileTouchedX = Math.floor(mapTouchLocation.x / tileSize.width);
+    	var tileTouchedY = Math.floor(mapSize.height - mapTouchLocation.y / tileSize.height); // Because Tiled maps register in the top left corner rather than bottom left
+    	var tileCoord = cc.p(tileTouchedX, tileTouchedY);
+    	var signProperties = tileMap.getPointProperties("signs", mapTouchLocation);
+    	var customerProperties = tileMap.getPointProperties("customers", mapTouchLocation);
+
+    	*/
+    	
+    	
+    	var tileSize = tileMap.getTileSize();
+    	var mapSizeTiles = tileMap.getMapSize();
+    	var mapSizePoints = new Object();
+    	mapSizePoints.width = mapSizeTiles.width * tileSize.width;
+    	mapSizePoints.height = mapSizeTiles.height * tileSize.height;
+    	var mapLocation = tileMap.getPosition();
+    	var gameSize = cc.Director.getInstance().getWinSize();
+    	cc.log("SCBox2DLayer getPhysicsUpdateWindow() mapSizePoints = " + mapSizePoints.width + " " + mapSizePoints.height);
+    	
+    	// World point is where on the screen we want the point to be
+    	var topLeftWorldPoint = cc.p(0 - this.gameConfig.Box2dLayer.physicsWindowMargin.x, gameSize.height +  this.gameConfig.Box2dLayer.physicsWindowMargin.y);
+    	var topLeftMapPoint = tileMap.convertToNodeSpace(topLeftWorldPoint);
+    	var topLeftTilePoint = cc.p(Math.floor(topLeftMapPoint.x / tileSize.width), Math.floor(mapSizeTiles.height - topLeftMapPoint.y / tileSize.height));
+    	var bottomLeftWorldPoint = cc.p(0 - this.gameConfig.Box2dLayer.physicsWindowMargin.x, 0 - this.gameConfig.Box2dLayer.physicsWindowMargin.y);
+    	var bottomLeftMapPoint = tileMap.convertToNodeSpace(bottomLeftWorldPoint);
+    	var bottomLeftTilePoint = cc.p(Math.floor(bottomLeftMapPoint.x / tileSize.width), Math.floor(mapSizeTiles.height - bottomLeftMapPoint.y / tileSize.height));
+    	var topRightWorldPoint = cc.p(gameSize.width + this.gameConfig.Box2dLayer.physicsWindowMargin.x, gameSize.height + this.gameConfig.Box2dLayer.physicsWindowMargin.y);
+    	var topRightMapPoint = tileMap.convertToNodeSpace(topRightWorldPoint);
+    	var topRightTilePoint = cc.p(Math.floor(topRightMapPoint.x / tileSize.width), Math.floor(mapSizeTiles.height - topRightMapPoint.y / tileSize.height));
+    	var bottomRightWorldPoint = cc.p(gameSize.width + this.gameConfig.Box2dLayer.physicsWindowMargin.x, 0 - this.gameConfig.Box2dLayer.physicsWindowMargin.y);
+    	var bottomRightMapPoint = tileMap.convertToNodeSpace(bottomRightWorldPoint);
+    	var bottomRightTilePoint = cc.p(Math.floor(bottomRightMapPoint.x / tileSize.width), Math.floor(mapSizeTiles.height - bottomRightMapPoint.y / tileSize.height));
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() topLeftWorldPoint.x/y = " + topLeftWorldPoint.x + " " + topLeftWorldPoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() topLeftMapPoint.x/y = " + topLeftMapPoint.x + " " + topLeftMapPoint.y);
+		cc.log("SCBox2DLayer getPhysicsUpdateWindow() topLeftTilePoint.x/y = " + topLeftTilePoint.x + " " + topLeftTilePoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomLeftWorldPoint.x/y = " + bottomLeftWorldPoint.x + " " + bottomLeftWorldPoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomLeftMapPoint.x/y = " + bottomLeftMapPoint.x + " " + bottomLeftMapPoint.y);
+		cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomLeftTilePoint.x/y = " + bottomLeftTilePoint.x + " " + bottomLeftTilePoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() topRightWorldPoint.x/y = " + topRightWorldPoint.x + " " + topRightWorldPoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() topRightMapPoint.x/y = " + topRightMapPoint.x + " " + topRightMapPoint.y);
+		cc.log("SCBox2DLayer getPhysicsUpdateWindow() topRightTilePoint.x/y = " + topRightTilePoint.x + " " + topRightTilePoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomRightWorldPoint.x/y = " + bottomRightWorldPoint.x + " " + bottomRightWorldPoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomRightMapPoint.x/y = " + bottomRightMapPoint.x + " " + bottomRightMapPoint.y);
+		cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomRightTilePoint.x/y = " + bottomRightTilePoint.x + " " + bottomRightTilePoint.y);
+		
+		
+	   	    
+    },
     update:function (dt) {
         //It is recommended that a fixed time step is used with Box2D for stability
         //of the simulation, however, we are using a variable time step here.

@@ -3,8 +3,9 @@
 var entities = new Array();
 var physicsEntities = new Array();
 
-var SCLayer = cc.Layer.extend({
+var SCTileLayer = cc.Layer.extend({
 	
+	_map:null,
 	ctor:function () {
         this.setTouchEnabled(true);
         this.setKeyboardEnabled(true);
@@ -29,9 +30,16 @@ var SCLayer = cc.Layer.extend({
     	this.addChild(this.HUDLayer, 999, this.gameConfig.globals.TAG_HUDLAYER);
     	
     	
+    	// Make a map from a Tiled map file. If there are problems here check the compression on the file from within Tiled.
+    	var tileMap = new SCTileMap();
+        tileMap.initWithTMXFile(this.gameConfig.maps.level1.filename);
+        tileMap.setPosition(this.gameConfig.maps.level1.position);
+        this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
+       
+       
         // Make a physics layer
         var physicsLayer = new SCBox2dLayer();
-        physicsLayer.init();
+        physicsLayer.initWithMap(tileMap);
         physicsLayer.setPosition(this.gameConfig.Box2dLayer.position);
         this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
        
@@ -93,8 +101,21 @@ var SCLayer = cc.Layer.extend({
        	this.sign.setPosition(this.gameConfig.sign.position);
         entities.push(this.sign);
        	this.HUDLayer.addChild(this.sign, 96, this.gameConfig.globals.TAG_PRICE);
-
+       
+    
+       	// Register callbacks
+     	var mapTouchEventCallback = function(testArg){player.mapTouched(testArg);};
+       	var mapTouchEvent = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP));
+       //	var mapTouchListener = new SCListener(mapTouchEvent, mapTouchEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER));
+       	var mapTouchListener = new SCListener(mapTouchEvent, mapTouchEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER));
+       	this.mediator.register(mapTouchListener);
      	
+     	
+     	var playerMovedCameraCallback = function(testArg){camera.playerMoved(testArg);};
+       	var playerMovedCameraEvent = new SCEvent(this.gameConfig.globals.MSG_PLAYER_MOVED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_CAMERA));
+       	var playerMovedCameraListener = new SCListener(playerMovedCameraEvent, playerMovedCameraCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_CAMERA));
+       //	this.mediator.register(playerMovedCameraListener); // turn back on to have camera move
+       	
        	var inputHandlerStateEventCallback = function(args){player.inputChanged(args);};
        	var inputHandleStateEvent = new SCEvent(this.gameConfig.globals.MSG_INPUT_CHANGED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER));
        	var inputHandlerStateEventListener = new SCListener(inputHandleStateEvent, inputHandlerStateEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER));
@@ -150,8 +171,71 @@ var SCLayer = cc.Layer.extend({
     // Handles touch up and mouse up
     onTouchEnded:function (touch, event) {
     	
-    	// Get touch info 
-    	var touchLocation = touch.getLocation();	
+    	// Get touch info and map info
+    	var touchLocation = touch.getLocation();
+    	var tileMap = this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP);
+    	var layer = tileMap.getLayer("foreground");
+    	var tileSize = tileMap.getTileSize();
+    	var mapSize = tileMap.getMapSize();
+    	var mapLocation = tileMap.getPosition();
+    	var mapTouchLocation = tileMap.convertTouchToNodeSpace(touch);
+    	var tileTouchedX = Math.floor(mapTouchLocation.x / tileSize.width);
+    	var tileTouchedY = Math.floor(mapSize.height - mapTouchLocation.y / tileSize.height); // Because Tiled maps register in the top left corner rather than bottom left
+    	var tileCoord = cc.p(tileTouchedX, tileTouchedY);
+    	var signProperties = tileMap.getPointProperties("signs", mapTouchLocation);
+    	var customerProperties = tileMap.getPointProperties("customers", mapTouchLocation);
+    	
+    	if(customerProperties){
+	    	this.customer.setLoan(customerProperties.loan);
+	    	tileMap.removeCustomer(tileCoord);
+    	}
+    	
+    	if(signProperties){
+	    	this.sign.setPrice(signProperties.price);
+	    	if(parseInt(this.customer.loan) >= parseInt(this.sign.price)){
+	    		this.score.score += parseInt(this.sign.getPrice());
+		    	tileMap.removeSign(tileCoord);
+		    	this.customer.loan = 0;
+	    	}	
+    	}
+    	
+    	// send touch event
+    	var touchArgs = new Object();
+    	touchArgs.touchLocation = touchLocation
+    	touchArgs.mapTouchLocation = mapTouchLocation;
+    	var touchEvent = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this, touchArgs);
+       	this.mediator.send(touchEvent);
+    	
+    	// send touch event to mediator
+    	// test sending an arbitrary object to the mediator to be sent to the callback
+    	//var args = new Object();
+    	//args.touchLocation = touchLocation;
+    	//args.mapTouchLocation = mapTouchLocation;
+    	//var event = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
+       	//this.mediator.send(event);
+       	//var event2 = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
+       	//this.mediator.send(event2);
+       	
+       	//this.gameLayer.getChildByTag(this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER)).move(mapTouchLocation);
+       	
+       	
+       	
+       	
+       	// Test adding an entity to the physics world
+       	// doesn't currently work
+       //	var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
+    	//player.setPosition(this.gameConfig.player.startPosition);
+    	//player.setID(this.gameConfig.globals.TAG_PLAYER);
+       	//player.setTexture(this.gameConfig.player.carRight);
+       	// add this back for testing adding a physics shape
+       	//this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoords(cc.p(touchLocation.x - this.gameLayer.getPosition().x, touchLocation.y - this.gameLayer.getPosition().y ));
+
+       	// a test for updating the physics shapes in the world
+       	// will eventually call this when the game screen has moved enough or state has otherwise changed that would cause a need to update.
+       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getPhysicsUpdateWindow(this.gameLayer.getPosition(), tileMap);
+       	
+       	//this.testWebAudioSynth();  	
+    
     },
     onTouchCancelled:function (touch, event) {
     },
@@ -254,7 +338,14 @@ var SCLayer = cc.Layer.extend({
     },
     
     updatePhysics:function (dt){
-    
+	    
+	    if(this.gameConfig.settings.SCPhysics == true){
+	    	for( var i = 0; i < physicsEntities.length; i++ ){
+	    		if(physicsEntities[i].physicsComponent){
+					physicsEntities[i].updatePhysics(dt, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP), physicsEntities);
+					}else{cc.log("SCTMXTiledScene updatePhysics entity with ------ NO ------ physics component.");}
+				}
+		}
     },
     
     
@@ -298,9 +389,20 @@ var SCLayer = cc.Layer.extend({
     
 });
 
-var Level1 = SCLayer.extend({
+// Use this to create different levels / areas on a map
+var Level1 = SCTileLayer.extend({
     ctor:function () {
         this._super();
+    },
+    
+    // not currently used. fix this up to make it easy to launch any level
+    initWithLevelName:function (levelName) {
+        var map = new SCTileMap();
+        map.initWithTMXFile(levelName);
+        map.setPosition(cc.p(0,0));
+        this.addChild(map, 0, this.gameConfig.globals.TAG_TILE_MAP);
+        
+	    
     }
 
 });

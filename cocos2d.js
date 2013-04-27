@@ -61,7 +61,7 @@
             'src/SCPlayerLogicComponent.js',
             'src/SCPlayer.js',
             'src/SCCar.js',
-            'src/SCScene.js',
+            'src/SCTMXTiledScene.js',
             'src/SCSceneManager.js',
             'src/SCGameMenu.js',
             'src/SCEndScene.js',
