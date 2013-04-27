@@ -150,7 +150,7 @@
                 <file name="src/SCPlayerPhysicsComponent.js"/>
                 <file name="src/SCPlayer.js"/>
                 <file name="src/SCCar.js"/>
-                <file name="src/SCTMXTiledScene.js"/>
+                <file name="src/SCScene.js"/>
                 <file name="src/SCGameInit.js"/>
                 <file name="src/SCGameMenu.js"/>
                 <file name="src/SCEndScene.js"/>
