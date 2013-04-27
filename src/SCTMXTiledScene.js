@@ -36,10 +36,14 @@ var SCTileLayer = cc.Layer.extend({
         tileMap.setPosition(this.gameConfig.maps.level1.position);
         this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
        
+       // Make the custom web audio synth class
+       this.synth = new SCSynth();
+       this.synth.init();
+       
        
         // Make a physics layer
         var physicsLayer = new SCBox2dLayer();
-        physicsLayer.initWithMap(tileMap);
+        physicsLayer.initWithMap(tileMap, this.synth);
         physicsLayer.setPosition(this.gameConfig.Box2dLayer.position);
         this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
        
@@ -130,11 +134,7 @@ var SCTileLayer = cc.Layer.extend({
      	// set the mediator in components
      	this.setComponentGlobalMediator(this.mediator);
      	
-     	// test Web Audio API
-     	//this.testWebAudioSynth();
-     	
-     	this.synth = new SCSynth();
-     	this.synth.init();
+    
      	
         // update each frame
        	this.scheduleUpdate();
@@ -182,6 +182,7 @@ var SCTileLayer = cc.Layer.extend({
     	var tileTouchedX = Math.floor(mapTouchLocation.x / tileSize.width);
     	var tileTouchedY = Math.floor(mapSize.height - mapTouchLocation.y / tileSize.height); // Because Tiled maps register in the top left corner rather than bottom left
     	var tileCoord = cc.p(tileTouchedX, tileTouchedY);
+    	/*
     	var signProperties = tileMap.getPointProperties("signs", mapTouchLocation);
     	var customerProperties = tileMap.getPointProperties("customers", mapTouchLocation);
     	
@@ -198,14 +199,15 @@ var SCTileLayer = cc.Layer.extend({
 		    	this.customer.loan = 0;
 	    	}	
     	}
-    	
+    	*/
+    	/*
     	// send touch event
     	var touchArgs = new Object();
     	touchArgs.touchLocation = touchLocation
     	touchArgs.mapTouchLocation = mapTouchLocation;
     	var touchEvent = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this, touchArgs);
        	this.mediator.send(touchEvent);
-    	
+    	*/
     	// send touch event to mediator
     	// test sending an arbitrary object to the mediator to be sent to the callback
     	//var args = new Object();

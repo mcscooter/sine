@@ -101,7 +101,8 @@ var SCGameConfig = cc.Class.extend({
 						"TAG_MENU_TITLE":13,
 						"TAG_CAR_ENTITY":14,
 						"TAG_BOX2D_LAYER":15,
-						"TAG_SPRITE_MANAGER":16
+						"TAG_SPRITE_MANAGER":16,
+						"TAG_BOX2D_STATIC":17
    		};
    		
    		this.timer = {	
@@ -144,16 +145,17 @@ var SCGameConfig = cc.Class.extend({
    					
    					
    		this.synth = {
-	   					voice1:{ 
+	   					instrument1:{ 
 	   						
-	   						"waveType":1, // 0=sine, 1=square, 2=saw, 3=triangle, 4=custom (must give it a wave table)
+	   						"waveType":0, // 0=sine, 1=square, 2=saw, 3=triangle, 4=custom (must give it a wave table)
 	   						"defaultFrequency":60, // MIDI value, middle C
 	   						"defaultVolume":.7,
+	   						"numVoices":6,
 	   						
 	   						ADSR:{	
 	   							"attackTime":.01,
 	   							"decayTime":.03,
-	   							"sustainTime":67,
+	   							"sustainTime":.2,
 	   							"releaseTime":.02,
 	   							"attackStartLevel":0,
 	   							"attackEndLevel":1,

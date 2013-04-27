@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="25" height="14" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="foreground2" tilewidth="32" tileheight="32" spacing="2" margin="2">
-  <image source="test-tilemap-tilesheet.png" width="640" height="400"/>
+  <image source="test-tilemap-tilesheet.png"/>
   <tile id="0">
    <properties>
     <property name="name" value="grass"/>
@@ -186,6 +186,7 @@
   </tile>
   <tile id="72">
    <properties>
+    <property name="note" value="75"/>
     <property name="physics" value="solid"/>
    </properties>
   </tile>
@@ -194,30 +195,22 @@
     <property name="physics" value="empty"/>
    </properties>
   </tile>
+  <tile id="74">
+   <properties>
+    <property name="note" value="90"/>
+    <property name="physics" value="solid"/>
+   </properties>
+  </tile>
+  <tile id="75">
+   <properties>
+    <property name="note" value="70"/>
+    <property name="physics" value="solid"/>
+   </properties>
+  </tile>
  </tileset>
- <layer name="background" width="25" height="14">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NkYGBgAmJGGtK0NHvUjlE7Ru0YtWOo2QEAqsfQx3gFAAA=
-  </data>
- </layer>
- <layer name="foreground" width="25" height="14">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NkYGBgRMOsUIwuTgqGmcFGQJ5Uc5mQMC3sYEJj09ofpIQVE5mYHnaQElbUwrS2A5c/RvEophQDACoO4/l4BQAA
-  </data>
- </layer>
- <layer name="signs" width="25" height="14">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA5NiYGCQGsWjeBSP4lFMNwwA0IEB9XgFAAA=
-  </data>
- </layer>
- <layer name="customers" width="25" height="14">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA5NiYGCQwoEtgdgKiK2RsBUWtg0Q26Kpx2UmNjvwYSscdtmRaAe6PyyxmIlNHTl2YHMrun+Q1ZFjBzaz0e0gNz6I8Qc2TKwdo3gUj3QMANLn9X54BQAA
-  </data>
- </layer>
  <layer name="physics" width="25" height="14">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA/NkYGDwpAP2oiEeSDsI2UuK/HAPK2qG3WDyBy3sGE1XA2sHrTEAEafHH3gFAAA=
+   H4sIAAAAAAAAA/NkYGDwpAP2oiEm1w5S9OCyA13cG4qx2YFNzpMMOwYirEgJO2LtQFdDiO8zSPxBj/igR7qiJGxoGSaDwQ5aYwAZ7iYmeAUAAA==
   </data>
  </layer>
 </map>

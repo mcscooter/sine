@@ -31,10 +31,11 @@
 var SCBox2dLayer = cc.Layer.extend({
 	ctor:function () {
 		this._super();
-        this.gameConfig = new SCGameConfig();        
+        this.gameConfig = new SCGameConfig();
+        this.synth = null;        
     },
     
-    initWithMap:function(map){
+    initWithMap:function(map, synth){
         var b2Vec2 = Box2D.Common.Math.b2Vec2
             , b2BodyDef = Box2D.Dynamics.b2BodyDef
             , b2Body = Box2D.Dynamics.b2Body
@@ -48,18 +49,43 @@ var SCBox2dLayer = cc.Layer.extend({
         // Construct a world object, which will hold and simulate the rigid bodies.
         this.world = new b2World(new b2Vec2(this.gameConfig.Box2dLayer.gravityX, this.gameConfig.Box2dLayer.gravityY), true);
         this.world.SetContinuousPhysics(true);
-
+        
+        this.synth = synth;
 
         // listen for beginning of all body collisions
         var listener = new Box2D.Dynamics.b2ContactListener;
         listener.BeginContact = function(contact) {
-         	cc.log("BOX2D Collision Contact Listener = ");
-         	cc.log(contact.GetFixtureA().GetBody().GetUserData());
+         	//this.handleCollision(contact);
+         	 cc.log("SCBox2DLayer listener.BeginContact() body A = ");
+         	 cc.log(contact.GetFixtureA().GetBody().GetUserData());  
+         	 cc.log("SCBox2DLayer listener.BeginContact() body B = ");
+         	 cc.log(contact.GetFixtureB().GetBody().GetUserData());
+         	 
+         	 var gameConfig = new SCGameConfig();
+         	 
+         	 var userDataA = contact.GetFixtureA().GetBody().GetUserData();
+         	 var userDataB = contact.GetFixtureB().GetBody().GetUserData();
+         	 
+         	 if(userDataA && userDataA.ID == gameConfig.globals.TAG_PLAYER){
+	         	 cc.log("userDataA.ID == TAG_PLAYER");
+	         	 if(userDataB){
+	         	 	userDataB.playNote = true;
+	         	 	}
+         	 }
+         	 
+         	 if(userDataB && userDataB.ID == gameConfig.globals.TAG_PLAYER){
+	         	 cc.log("userDataB.ID == TAG_PLAYER");
+	         	 if(userDataA){
+	         	 	userDataA.playNote = true;
+	         	 	}
+         	 } 
+         	 
          }
          this.world.SetContactListener(listener);
        
         // take tile map and make physics shapes.
-        this.makeTiles(map, true, cc.p(-100,-110), cc.p(30,20));
+        // JOINING DOESN'T CURRENTLY WORK WITH SOUND
+        this.makeTiles(map, false, cc.p(-100,-110), cc.p(30,20));
        
 
 
@@ -122,18 +148,20 @@ var SCBox2dLayer = cc.Layer.extend({
 	        	 	
         	
         // Start creating the tile world rigid bodies
+       /*
         var fixDef = new b2FixtureDef;
         fixDef.density = this.gameConfig.Box2dLayer.tileBox.density;
         fixDef.friction = this.gameConfig.Box2dLayer.tileBox.friction;
         fixDef.restitution = this.gameConfig.Box2dLayer.tileBox.restitution;
-
+        */
+/*
         var bodyDef = new b2BodyDef;
 
         //create standard tile body
         bodyDef.type = b2Body.b2_staticBody;
         fixDef.shape = new b2PolygonShape;
         fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
-
+*/
 
         // check draw area for being within the tile map
         if(bottomLeft.x<0){
@@ -161,9 +189,22 @@ var SCBox2dLayer = cc.Layer.extend({
 		       var tileProps = map.getTileProperties("physics", cc.p(j,i));
 		       if(tileProps){
 			       if(tileProps.physics && tileProps.physics == "solid"){
-			       	fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
+			       
+			        var fixDef = new b2FixtureDef;
+			        fixDef.density = this.gameConfig.Box2dLayer.tileBox.density;
+			        fixDef.friction = this.gameConfig.Box2dLayer.tileBox.friction;
+			        fixDef.restitution = this.gameConfig.Box2dLayer.tileBox.restitution;
+			           var bodyDef = new b2BodyDef;
+
+			           //create standard tile body
+			           bodyDef.type = b2Body.b2_staticBody;
+			           fixDef.shape = new b2PolygonShape;
+			           fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
+
+			       	//fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
 			       	var pos = cc.p(j, i);
 			       	// join consecutive horizontal tiles if desired
+			       	// JOINING DOESN'T CURRENTY WORK WITH SOUND!!!!
 			       	if(joinX == true){
 			       		j++;
 			       		var shapeWidth = this.gameConfig.Box2dLayer.tileBox.diameter;
@@ -181,6 +222,14 @@ var SCBox2dLayer = cc.Layer.extend({
 			       	}
 			       	// Attach body to world
 			       	bodyDef.position.Set(pos.x + this.gameConfig.Box2dLayer.tileBox.center, pos.y + this.gameConfig.Box2dLayer.tileBox.center);
+			       	
+			       	if(tileProps && tileProps.note){
+			       		cc.log("SCBox2DLayer makeTiles() note = " + tileProps.note);
+			       		bodyDef.userData = new SCEntity();
+			       		bodyDef.userData.note = tileProps.note;
+			       		bodyDef.userData.playNote = false;
+			       		bodyDef.userData.ID = this.gameConfig.globals.TAG_BOX2D_STATIC;
+			       	}
 				   	this.world.CreateBody(bodyDef).CreateFixture(fixDef);    
 			       }
 			       
@@ -189,6 +238,7 @@ var SCBox2dLayer = cc.Layer.extend({
         }
 	    
     },
+    
 
     addNewSpriteWithCoords:function (p) {
         //UXLog(L"Add sprite %0.2f x %02.f",p.x,p.y);
@@ -357,6 +407,13 @@ var SCBox2dLayer = cc.Layer.extend({
             if (b.GetUserData() != null) {
                 //Synchronize the AtlasSprites position and rotation with the corresponding body
                 var myActor = b.GetUserData();
+                
+                if(myActor.playNote == true && myActor.note){
+	                cc.log("SCBox2DLayer update() ActorID = " + myActor.ID + " note = " + myActor.note);
+	                this.synth.playNote(myActor.note);
+	                myActor.playNote = false;
+                }
+                
                 // if it is the player -- needs to be moved to player entity
                 if(myActor.ID && myActor.ID == this.gameConfig.globals.TAG_PLAYER){
                 	
@@ -365,30 +422,30 @@ var SCBox2dLayer = cc.Layer.extend({
                 	b.SetAngularVelocity(0);
                 	
                 	if(myActor.state && myActor.state.movementDirection){
-                		cc.log("SCBox2DLayer update() myActor.state.movementDirection = " + myActor.state.movementDirection);
+                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection = " + myActor.state.movementDirection);
                 		if(myActor.state.movementDirection == "up"){
-	                		cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"up\"");
+	                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"up\"");
 	                		var force = new b2Vec2(0,10);
 	                		b.SetAwake(true);
 	                		b.SetLinearVelocity(force);
 	                	
 	                	}
 	                	if(myActor.state.movementDirection == "right"){
-	                		cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"right\"");
+	                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"right\"");
 	                		var force = new b2Vec2(10,0);
 	                		b.SetAwake(true);
 	                		b.SetLinearVelocity(force);
 	                	
 	                	}
 	                	if(myActor.state.movementDirection == "left"){
-	                		cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"left\"");
+	                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"left\"");
 	                		var force = new b2Vec2(-10,0);
 	                		b.SetAwake(true);
 	                		b.SetLinearVelocity(force);
 	                	
 	                	}
 	                	if(myActor.state.movementDirection == "down"){
-	                		cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"down\"");
+	                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"down\"");
 	                		var force = new b2Vec2(0,-10);
 	                		b.SetAwake(true);
 	                		b.SetLinearVelocity(force);
