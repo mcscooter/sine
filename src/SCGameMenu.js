@@ -20,7 +20,7 @@ var SCGameMenu = cc.Layer.extend({
         var background = new cc.Sprite(this.gameConfig.gameMenuScene.backgroundTexture);     
     	background.setPosition(this.gameConfig.gameMenuScene.backgroundPosition);
     	this.addChild(background, -999, this.gameConfig.globals.TAG_MENU_BACKGROUND);
-        
+        /*
         var title = new cc.Sprite(this.gameConfig.gameMenuScene.titleTexture);     
     	title.setPosition(this.gameConfig.gameMenuScene.titlePosition);
     	//this.addChild(title, 1, this.gameConfig.globals.TAG_MENU_TITLE);
@@ -34,7 +34,7 @@ var SCGameMenu = cc.Layer.extend({
         menu.alignItemsHorizontallyWithPadding(50);
         menu.setPosition(this.gameConfig.gameMenuScene.menuPosition);
         this.addChild(menu);
-
+*/
         return true;
     },
     
@@ -48,7 +48,7 @@ var SCGameMenu = cc.Layer.extend({
     },
     onTouchesEnded:function (touches, event) {
         this.isMouseDown = false;
-       // this.playGame();
+        this.playGame();
     },
     onTouchesCancelled:function (touches, event) {
         console.log("onTouchesCancelled");
@@ -65,6 +65,15 @@ var SCGameMenu = cc.Layer.extend({
     	catch(e) {
     		alert('Web Audio API is not working. Maybe try another browser (Chrome or Safari?');
     	}  
+    	try{
+    		cc.Director.getInstance().gameConfig = new SCGameConfig();
+    		}
+    	catch(e){
+    		cc.log("SCGameMenu Cannot create gameConfig for cc.Director.sharedInstance()");	
+    	}
+    	
+    	
+    	
         //var director = cc.Director.getInstance();
         cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
         cc.AnimationCache.purgeSharedAnimationCache();

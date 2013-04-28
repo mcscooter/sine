@@ -24,6 +24,7 @@ var SCGameConfig = cc.Class.extend({
    						"carLeft":cc.TextureCache.getInstance().addImage(s_CarLeft),
    						"carUp":cc.TextureCache.getInstance().addImage(s_CarUp),
    						"carDown":cc.TextureCache.getInstance().addImage(s_CarDown),
+   						"ball":cc.TextureCache.getInstance().addImage(s_Ball),
    						"baseTextureRect":cc.rect(0, 0, 32, 32),
    						"startPosition":cc.p(80, 224),
    						"hitbox":cc.rect(-14,-14,28,28),
@@ -65,6 +66,12 @@ var SCGameConfig = cc.Class.extend({
 	   						"position":cc.p(0,0)
 	   					}
    					};
+   					
+   		this.sessionData = {
+	   					"score":0,
+	   					"level":1,
+	   					"bestScore":0
+	   				};
    					
    		this.Box2dLayer = {
 	   					"position":cc.p(0,0),
@@ -140,7 +147,7 @@ var SCGameConfig = cc.Class.extend({
 
    					
    		this.debug = {	
-	   					"drawHitboxes":true	
+	   					"drawHitboxes":false	
    					};
    					
    		this.settings = {

@@ -152,6 +152,7 @@ var SCBox2dLayer = cc.Layer.extend({
             , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
             , b2World = Box2D.Dynamics.b2World
             , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            , b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
             , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
             
             this.makeTiles(map, false, cc.p(-100,-110), cc.p(30,20));
@@ -172,6 +173,7 @@ var SCBox2dLayer = cc.Layer.extend({
             , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
             , b2World = Box2D.Dynamics.b2World
             , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            , b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
             , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
 	        	 	
         	
@@ -223,11 +225,22 @@ var SCBox2dLayer = cc.Layer.extend({
 			        fixDef.friction = this.gameConfig.Box2dLayer.tileBox.friction;
 			        fixDef.restitution = this.gameConfig.Box2dLayer.tileBox.restitution;
 			           var bodyDef = new b2BodyDef;
+			           
+			           var circle = new b2CircleShape(.5);
+			           var square = new b2PolygonShape;
 
-			           //create standard tile body
-			           bodyDef.type = b2Body.b2_staticBody;
-			           fixDef.shape = new b2PolygonShape;
-			           fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
+			           if(tileProps.shape && tileProps.shape == "circle"){
+				           // create a circle
+				           bodyDef.type = b2Body.b2_staticBody;
+				           fixDef.shape = circle;
+			           }
+
+			           if(tileProps.shape && tileProps.shape == "square"){
+			           		//create square tile body
+			           		bodyDef.type = b2Body.b2_staticBody;
+			           		fixDef.shape = square;
+			           		fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
+			           }
 
 			       	//fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
 			       	var pos = cc.p(j, i);
@@ -240,7 +253,7 @@ var SCBox2dLayer = cc.Layer.extend({
 				       		tileProps = map.getTileProperties("physics", cc.p(j,i));
 				       		if(tileProps && tileProps.physics && tileProps.physics == "solid"){
 				       			shapeWidth += this.gameConfig.Box2dLayer.tileBox.diameter;
-					       		fixDef.shape.SetAsBox(shapeWidth, this.gameConfig.Box2dLayer.tileBox.center);
+					       		//fixDef.shape.SetAsBox(shapeWidth, this.gameConfig.Box2dLayer.tileBox.center);
 					       		pos = cc.p(pos.x + this.gameConfig.Box2dLayer.tileBox.center, pos.y);
 					       	}else{
 					       		break;
@@ -356,7 +369,7 @@ var SCBox2dLayer = cc.Layer.extend({
         // Define another box shape for our dynamic body.
        // var dynamicBox = new b2PolygonShape();
         //dynamicBox.SetAsBox(0.5, 0.5);//These are mid points for our 1m box
-        var dynamicCircle = new b2CircleShape(.5);
+        var dynamicCircle = new b2CircleShape(.4);
        // dynamicCircle.SetAsCircle(0.5, 0.5);
 
         // Define the dynamic body fixture.
@@ -508,7 +521,7 @@ var SCBox2dLayer = cc.Layer.extend({
                 // if it is the player -- needs to be moved to player entity
                 if(myActor.ID && myActor.ID == this.gameConfig.globals.TAG_PLAYER){
                 	
-                	
+                	/*
                 	
                 	b.SetAwake(true);
                 	b.SetAngle(0);
@@ -545,7 +558,7 @@ var SCBox2dLayer = cc.Layer.extend({
 	                	
 	                	}
 	                	
-	                }
+	                }*/
 	             }
 	            myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
                 myActor.setRotation(-1 * cc.RADIANS_TO_DEGREES(b.GetAngle()));

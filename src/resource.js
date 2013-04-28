@@ -10,12 +10,14 @@ var s_CarLeft = "res/images/car-left.png";
 var s_CarUp = "res/images/car-up.png";
 var s_CarDown = "res/images/car-down.png";
 
+var s_Ball = "res/images/entities/ball.png";
+
 var s_GreenCarRight = "res/images/entities/green-car-right.png";
 var s_GreenCarLeft = "res/images/entities/green-car-left.png";
 var s_GreenCarUp = "res/images/entities/green-car-up.png";
 var s_GreenCarDown = "res/images/entities/green-car-down.png";
 
-var s_MenuBG = "res/images/menu/bg.png";
+var s_MenuBG = "res/images/menu/menu.png";
 var s_MenuPlay = "res/images/menu/play.png";
 var s_MenuInstructions = "res/images/menu/instructions.png";
 var s_MenuAbout = "res/images/menu/about.png";
@@ -42,6 +44,7 @@ var g_ressources = [
     {type:"image", src:s_CarLeft},
     {type:"image", src:s_CarUp},
     {type:"image", src:s_CarDown},
+    {type:"image", src:s_Ball},
     {type:"image", src:s_GreenCarRight},
     {type:"image", src:s_GreenCarLeft},
     {type:"image", src:s_GreenCarUp},

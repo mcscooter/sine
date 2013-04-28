@@ -35,13 +35,12 @@ var SCTileLayer = cc.Layer.extend({
     	this.addChild(this.HUDLayer, 999, this.gameConfig.globals.TAG_HUDLAYER);
     	
     	
-    	// Make a map from a Tiled map file. If there are problems here check the compression on the file from within Tiled.
-    	var tileMap = new SCTileMap();
-        tileMap.initWithTMXFile(this.gameConfig.maps.level1.filename);
-        tileMap.setPosition(this.gameConfig.maps.level1.position);
-        this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
+    	var tileMap = this.loadTileMap();
+    	this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
+    	
        
        // Make the custom web audio synth class
+       //this.synth = cc.Director.getInstance().synth;
        this.synth = new SCSynth();
        this.synth.init();
        
@@ -66,7 +65,7 @@ var SCTileLayer = cc.Layer.extend({
        
     	// Make a player entity
     	// Since SCPlayer extends a CCSprite (SCEntity), we start with a texture. Could be a 1px transparent image if an invisible sprite is needed.
-    	var texture = cc.TextureCache.getInstance().addImage(s_CarRight);
+    	var texture = cc.TextureCache.getInstance().addImage(s_Ball);
         //var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
         var player = new SCPlayer(texture, this.gameConfig.player.baseTextureRect);     
     	player.setPosition(this.gameConfig.player.startPosition);
@@ -304,7 +303,10 @@ var SCTileLayer = cc.Layer.extend({
 	    }
 	    */
 	    
+	    this.synth.destroy();
+	    
         var director = cc.Director.getInstance();
+        cc.Director.getInstance().gameConfig.sessionData.level += 1;
         cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
         cc.AnimationCache.purgeSharedAnimationCache();
         cc.SpriteFrameCache.purgeSharedSpriteFrameCache();
@@ -315,41 +317,25 @@ var SCTileLayer = cc.Layer.extend({
 	    this.levelNumber++;
     },
     
-    loadLevel2:function(){
-	    cc.log("SCTMXTiledScene loadLevel2()");
+    loadTileMap:function(){
+	    cc.log("SCTMXTiledScene loadTileMap()");
 	    
-	    
-	    //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP).initWithTMXFile(this.gameConfig.maps.level2.filename);
+	    var level = cc.Director.getInstance().gameConfig.sessionData.level;
 	    
 	    // Make a map from a Tiled map file. If there are problems here check the compression on the file from within Tiled.
     	var tileMap = new SCTileMap();
-        tileMap.initWithTMXFile(this.gameConfig.maps.level2.filename);
-        tileMap.setPosition(this.gameConfig.maps.level2.position);
-        this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
-        
-        
-        this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).setUpWorldWithMap(tileMap);
-        //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).setPosition(this.gameConfig.Box2dLayer.position);
-        //this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
-        
-        //var physicsLayer = new SCBox2dLayer();
-        //physicsLayer.initWithMap(tileMap, this.synth, this.mediator, this);
-        //physicsLayer.setPosition(this.gameConfig.Box2dLayer.position);
-        //this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
-        
-        var player = new SCCar(this.gameConfig.greenCar.greenCarRight, this.gameConfig.greenCar.baseTextureRect);
-        //var texture = cc.TextureCache.getInstance().addImage(s_CarRight);
-        //var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
-        //var player = new SCPlayer(texture, this.gameConfig.player.baseTextureRect);  
-        
-        // var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
-    	player.setPosition(this.gameConfig.player.startPosition);
-    	player.setID(this.gameConfig.globals.TAG_PLAYER);
-    	//entities.push(player);
-    	//physicsEntities.push(player);
-    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewEntity(this.gameConfig.player.startPosition,player);
-    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
-       
+	    
+	    if(level == 1){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level1.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level1.position); 
+		   return tileMap;   
+	    }
+	    
+	    if(level == 2){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level2.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level2.position); 
+		   return tileMap;   
+	    }
 	    
     },
     
