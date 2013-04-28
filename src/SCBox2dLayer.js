@@ -421,14 +421,20 @@ var SCBox2dLayer = cc.Layer.extend({
                 			
 	                		cc.log("SCBox2DLayer shoot()");
 	                		//var force = new b2Vec2(2,10);
-	                		var force = new b2Vec2((target.x-origin.x)/100,(target.y-origin.y)/100)
+	                		var rawVect = cc.p((target.x-origin.x)/100,(target.y-origin.y)/100);
+	                		var vectPercent;
+	                		var forceFactor = 10;
+	                		if(rawVect.x >= rawVect.y){
+	                			vectPercent = cc.p(1.0 - rawVect.y / rawVect.x ,rawVect.y / rawVect.x);
+	                		}else{
+	                			vectPercent = cc.p(1.0 - rawVect.x / rawVect.y ,rawVect.x / rawVect.y);
+	                		}
+	                		var force = new b2Vec2(forceFactor * (rawVect.x / (Math.abs(rawVect.x) + Math.abs(rawVect.y))), forceFactor * (rawVect.y / (Math.abs(rawVect.x) + Math.abs(rawVect.y))));
 	                		cc.log("SCBox2DLayer shoot() vel.x/y = " + force.x + " " + force.y);
 	                		b.SetAwake(true);
 	                		b.SetLinearVelocity(force);
 	                		b.SetAngle(0);
-	                		b.SetAngularVelocity(0);
-	                	
-	                	
+	                		b.SetAngularVelocity(0);	
 	                
 	             }
 	            myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
@@ -502,8 +508,8 @@ var SCBox2dLayer = cc.Layer.extend({
 	                		b.SetLinearVelocity(force);
 	                	
 	                	}
-	                	*/
-	                }
+	                	
+	                }*/
 	             }
 	            myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
                 myActor.setRotation(-1 * cc.RADIANS_TO_DEGREES(b.GetAngle()));
