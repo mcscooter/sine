@@ -337,7 +337,7 @@ var SCBox2dLayer = cc.Layer.extend({
         //batch.addChild(sprite);
 
         newEntity.setPosition(cc.p(p.x, p.y));
-        this.addChild(newEntity, 100, newEntity.getID());
+        this.addChild(newEntity, 1000, newEntity.getID());
 
         // Define the dynamic body.
         //Set up a 1m squared box in the physics world
@@ -508,10 +508,12 @@ var SCBox2dLayer = cc.Layer.extend({
                 // if it is the player -- needs to be moved to player entity
                 if(myActor.ID && myActor.ID == this.gameConfig.globals.TAG_PLAYER){
                 	
-                	//b.SetAwake(true);
-                	//b.SetAngle(0);
-                	//b.SetAngularVelocity(0);
-                	/*
+                	
+                	
+                	b.SetAwake(true);
+                	b.SetAngle(0);
+                	b.SetAngularVelocity(0);
+                	
                 	if(myActor.state && myActor.state.movementDirection){
                 		//cc.log("SCBox2DLayer update() myActor.state.movementDirection = " + myActor.state.movementDirection);
                 		if(myActor.state.movementDirection == "up"){
@@ -543,7 +545,7 @@ var SCBox2dLayer = cc.Layer.extend({
 	                	
 	                	}
 	                	
-	                }*/
+	                }
 	             }
 	            myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
                 myActor.setRotation(-1 * cc.RADIANS_TO_DEGREES(b.GetAngle()));
@@ -571,9 +573,20 @@ var SCBox2dLayer = cc.Layer.extend({
 	  		//this.globalMediator.send(event);
 	  		//this.parentScene.endLevel(args);
 	  		//this.synth.destroy();
+	  		
+	  		//this.parentScene.endLevel(args);
+	  		
 	  		for (var b = this.world.GetBodyList(); b; b = b.GetNext()) {
-		  			//this.world.DestroyBody(b);
+	  			var myActor = b.GetUserData();
+	  			
+	  			if(myActor && myActor.ID && myActor.ID == this.gameConfig.globals.TAG_PLAYER){
+	  				cc.log("SCBox2DLayer endLevel() myActor == player");
+	  				 myActor.setVisible(false);
 	  			}
+	  				
+	  		
+		  		this.world.DestroyBody(b);
+	  		}
 	  		this.parentScene.endLevel(args);
     }
     

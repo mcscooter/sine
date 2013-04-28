@@ -66,7 +66,9 @@ var SCTileLayer = cc.Layer.extend({
        
     	// Make a player entity
     	// Since SCPlayer extends a CCSprite (SCEntity), we start with a texture. Could be a 1px transparent image if an invisible sprite is needed.
-        var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
+    	var texture = cc.TextureCache.getInstance().addImage(s_CarRight);
+        //var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
+        var player = new SCPlayer(texture, this.gameConfig.player.baseTextureRect);     
     	player.setPosition(this.gameConfig.player.startPosition);
     	player.setID(this.gameConfig.globals.TAG_PLAYER);
     	entities.push(player);
@@ -286,16 +288,37 @@ var SCTileLayer = cc.Layer.extend({
 	    cc.log("SCTMXTiledScene endLevel()");
 	    //var director = cc.Director.getInstance();
 	    	//director.replaceScene(new Level1);
-	    //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP).removeChild();
-	    //this.gameLayer.removeChild(this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP));
+	    this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP).removeChild();
+	    this.gameLayer.removeChild(this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP));
+	   // this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).removeChild();
+	   // this.gameLayer.removeChild(this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER));
+	   
+	   //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).removeChild();
+	   //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).visible = false;
+	  // this.gameLayer.removeChildByTag(this.gameConfig.globals.TAG_PLAYER, true);
+	   //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(cc.p(0,0));
+	   
+	   /*
 	    if(this.levelNumber == 1){
 		    this.loadLevel2();
 	    }
+	    */
+	    
+        var director = cc.Director.getInstance();
+        cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
+        cc.AnimationCache.purgeSharedAnimationCache();
+        cc.SpriteFrameCache.purgeSharedSpriteFrameCache();
+        cc.TextureCache.purgeSharedTextureCache();
+        director.replaceScene(new Level1);
+
+	    
 	    this.levelNumber++;
     },
     
     loadLevel2:function(){
 	    cc.log("SCTMXTiledScene loadLevel2()");
+	    
+	    
 	    //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP).initWithTMXFile(this.gameConfig.maps.level2.filename);
 	    
 	    // Make a map from a Tiled map file. If there are problems here check the compression on the file from within Tiled.
@@ -305,9 +328,28 @@ var SCTileLayer = cc.Layer.extend({
         this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
         
         
-        this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).setUpWorldWithMap(tileMap, this.synth, this.mediator, this);
+        this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).setUpWorldWithMap(tileMap);
         //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).setPosition(this.gameConfig.Box2dLayer.position);
         //this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
+        
+        //var physicsLayer = new SCBox2dLayer();
+        //physicsLayer.initWithMap(tileMap, this.synth, this.mediator, this);
+        //physicsLayer.setPosition(this.gameConfig.Box2dLayer.position);
+        //this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
+        
+        var player = new SCCar(this.gameConfig.greenCar.greenCarRight, this.gameConfig.greenCar.baseTextureRect);
+        //var texture = cc.TextureCache.getInstance().addImage(s_CarRight);
+        //var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
+        //var player = new SCPlayer(texture, this.gameConfig.player.baseTextureRect);  
+        
+        // var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
+    	player.setPosition(this.gameConfig.player.startPosition);
+    	player.setID(this.gameConfig.globals.TAG_PLAYER);
+    	//entities.push(player);
+    	//physicsEntities.push(player);
+    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewEntity(this.gameConfig.player.startPosition,player);
+    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
+       
 	    
     },
     

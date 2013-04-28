@@ -56,7 +56,16 @@ var SCGameMenu = cc.Layer.extend({
     
     playGame:function(){
 	    delete this;
-        var director = cc.Director.getInstance();
+	    
+	    var director = cc.Director.getInstance();
+	    
+	    try {
+    		cc.Director.getInstance().audioContext = new webkitAudioContext();
+    	}
+    	catch(e) {
+    		alert('Web Audio API is not working. Maybe try another browser (Chrome or Safari?');
+    	}  
+        //var director = cc.Director.getInstance();
         cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
         cc.AnimationCache.purgeSharedAnimationCache();
         cc.SpriteFrameCache.purgeSharedSpriteFrameCache();

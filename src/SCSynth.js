@@ -14,12 +14,7 @@ var SCSynth = cc.Class.extend({
     
     init:function (){
 	  
-	   try {
-    		this.audioContext = new webkitAudioContext();
-    	}
-    	catch(e) {
-    		alert('Web Audio API is not working. Maybe try another browser (Chrome or Safari?');
-    	}  
+		this.audioContext = cc.Director.getInstance().audioContext;
     	
     	this.voices = new Array();
     	
