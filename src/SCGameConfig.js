@@ -26,7 +26,7 @@ var SCGameConfig = cc.Class.extend({
    						"carDown":cc.TextureCache.getInstance().addImage(s_CarDown),
    						"ball":cc.TextureCache.getInstance().addImage(s_Ball),
    						"baseTextureRect":cc.rect(0, 0, 32, 32),
-   						"startPosition":cc.p(80, 224),
+   						"startPosition":cc.p(80, 236),
    						"hitbox":cc.rect(-14,-14,28,28),
    						"centerOffset":cc.p(16,16),
    						"baseSpeed":1,
@@ -58,12 +58,62 @@ var SCGameConfig = cc.Class.extend({
 	   					level1:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth1.tmx",
-	   						"position":cc.p(0,0)
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
 	   					},
 	   					level2:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth2.tmx",
-	   						"position":cc.p(0,0)
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
+	   					},
+	   					level3:{ 	
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth3.tmx",
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
+	   					},
+	   					level4:{ 	
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth4.tmx",
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
+	   					},
+	   					level5:{ 	
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth5.tmx",
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
+	   					},
+	   					level6:{ 	
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth6.tmx",
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
+	   					},
+	   					level7:{ 	
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth7.tmx",
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
+	   					},
+	   					level8:{ 	
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth8.tmx",
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
+	   					},
+	   					level9:{ 	
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth9.tmx",
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
+	   					},
+	   					level10:{ 	
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth10.tmx",
+	   						"position":cc.p(0,0),
+	   						"ballStart":cc.p(272, 224)
 	   					}
    					};
    					
@@ -143,6 +193,12 @@ var SCGameConfig = cc.Class.extend({
 	   					"titleTexture":cc.TextureCache.getInstance().addImage(s_MenuTitle),
 	   					"titlePosition":cc.p(400,250),
 	   					"menuPosition":cc.p(400,100)
+   					};
+   					
+   		this.gameEndScene = {	
+	   					"backgroundTexture":cc.TextureCache.getInstance().addImage(s_endTempBG),
+	   					"backgroundTextureRect":cc.rect(0, 0, 800, 450),
+	   					"backgroundPosition":cc.p(400,225)
    					};
 
    					

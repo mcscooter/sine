@@ -68,7 +68,7 @@ var SCTileLayer = cc.Layer.extend({
     	var texture = cc.TextureCache.getInstance().addImage(s_Ball);
         //var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
         var player = new SCPlayer(texture, this.gameConfig.player.baseTextureRect);     
-    	player.setPosition(this.gameConfig.player.startPosition);
+    	player.setPosition(this.getPlayerLevelStart());
     	player.setID(this.gameConfig.globals.TAG_PLAYER);
     	entities.push(player);
     	//physicsEntities.push(player);
@@ -178,7 +178,7 @@ var SCTileLayer = cc.Layer.extend({
     },
     onTouchBegan:function (touch, event) {
     	if(this.iosSoundInitialized == false){
-	    	this.synth.playNote(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 127)));
+	    	//this.synth.playNote(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 40 + 10)));
 	    	this.synth.changeLowPassFilterFrequency(Math.abs(Math.floor(touch.getLocation().x / cc.Director.getInstance().getWinSize().width * 12000)));
 	    	this.iosSoundInitialized = true;
 	    	}
@@ -305,16 +305,30 @@ var SCTileLayer = cc.Layer.extend({
 	    
 	    this.synth.destroy();
 	    
-        var director = cc.Director.getInstance();
-        cc.Director.getInstance().gameConfig.sessionData.level += 1;
-        cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
-        cc.AnimationCache.purgeSharedAnimationCache();
-        cc.SpriteFrameCache.purgeSharedSpriteFrameCache();
-        cc.TextureCache.purgeSharedTextureCache();
-        director.replaceScene(new Level1);
+	    var level = cc.Director.getInstance().gameConfig.sessionData.level;
+	    
+	    if(level < 2){
+        	var director = cc.Director.getInstance();
+        	cc.Director.getInstance().gameConfig.sessionData.level += 1;
+        	cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
+        	cc.AnimationCache.purgeSharedAnimationCache();
+        	cc.SpriteFrameCache.purgeSharedSpriteFrameCache();
+        	cc.TextureCache.purgeSharedTextureCache();
+        	director.replaceScene(new Level1);
+        }else{
+	        var director = cc.Director.getInstance();
+        	cc.Director.getInstance().gameConfig.sessionData.level += 1;
+        	cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
+        	cc.AnimationCache.purgeSharedAnimationCache();
+        	cc.SpriteFrameCache.purgeSharedSpriteFrameCache();
+        	cc.TextureCache.purgeSharedTextureCache();
+        	director.replaceScene(new SCEndScene);
+
+	        
+        }
 
 	    
-	    this.levelNumber++;
+	    
     },
     
     loadTileMap:function(){
@@ -335,6 +349,102 @@ var SCTileLayer = cc.Layer.extend({
 		   tileMap.initWithTMXFile(this.gameConfig.maps.level2.filename);
 		   tileMap.setPosition(this.gameConfig.maps.level2.position); 
 		   return tileMap;   
+	    }
+	    
+	     if(level == 3){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level3.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level3.position); 
+		   return tileMap;   
+	    }
+	    
+	     if(level == 4){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level4.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level4.position); 
+		   return tileMap;   
+	    }
+	    
+	     if(level == 5){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level5.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level5.position); 
+		   return tileMap;   
+	    }
+	    
+	     if(level == 6){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level6.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level6.position); 
+		   return tileMap;   
+	    }
+	    
+	     if(level == 7){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level7.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level7.position); 
+		   return tileMap;   
+	    }
+	    
+	     if(level == 8){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level8.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level8.position); 
+		   return tileMap;   
+	    }
+	    
+	     if(level == 9){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level9.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level9.position); 
+		   return tileMap;   
+	    }
+	    
+	     if(level == 10){
+		   tileMap.initWithTMXFile(this.gameConfig.maps.level10.filename);
+		   tileMap.setPosition(this.gameConfig.maps.level10.position); 
+		   return tileMap;   
+	    }
+	    
+    },
+    
+    getPlayerLevelStart:function(){
+	    cc.log("SCTMXTiledScene getPlayerLevelStart()");
+	    
+	    var level = cc.Director.getInstance().gameConfig.sessionData.level;
+	    
+	    if(level == 1){
+		   return this.gameConfig.maps.level1.ballStart;   
+	    }
+	    
+	    if(level == 2){
+  
+		   return this.gameConfig.maps.level2.ballStart;    
+	    }
+	    
+	     if(level == 3){ 
+		     return this.gameConfig.maps.level3.ballStart;     
+	    }
+	    
+	     if(level == 4){ 
+		   return this.gameConfig.maps.level4.ballStart;  
+	    }
+	    
+	     if(level == 5){   
+		   return this.gameConfig.maps.level5.ballStart;  
+	    }
+	    
+	     if(level == 6){  
+		   return this.gameConfig.maps.level6.ballStart;     
+	    }
+	    
+	     if(level == 7){
+		   return this.gameConfig.maps.level7.ballStart;  
+	    }
+	    
+	     if(level == 8){
+		     return this.gameConfig.maps.level8.ballStart;  
+	    }
+	    
+	     if(level == 9){
+		     return this.gameConfig.maps.level9.ballStart;  
+	    }
+	    
+	     if(level == 10){
+		     return this.gameConfig.maps.level10.ballStart;  
 	    }
 	    
     },

@@ -24,6 +24,11 @@ var s_MenuAbout = "res/images/menu/about.png";
 var s_MenuSite = "res/images/menu/site.png";
 var s_MenuTitle = "res/images/menu/title.png";
 
+
+var s_endBG = "res/images/menu/end-screen.png";
+var s_endTempBG = "res/images/menu/end-screen-template.png";
+
+
 var s_TestTilesheet = "res/tilemaps/test-tilemap-tilesheet.png";
 var s_TestTilesheet2 = "res/tilemaps/fixed-ortho-test2.png";
 var s_MetaTilesheet = "res/tilemaps/fixed-ortho-test2.png";
@@ -59,6 +64,8 @@ var g_ressources = [
     {type:"image", src:s_MenuAbout},
     {type:"image", src:s_MenuSite},
     {type:"image", src:s_MenuTitle},
+    {type:"image", src:s_endBG},
+    {type:"image", src:s_endTempBG},
     {type:"image", src:s_pathBlock},
     
 
@@ -70,7 +77,15 @@ var g_ressources = [
    // {type:"tmx", src:"res/tilemaps/test-tilemap.tmx"},
    // {type:"tmx", src:"res/tilemaps/ortho-tile-property.tmx"}
     {type:"tmx", src:"res/tilemaps/synth1.tmx"},
-    {type:"tmx", src:"res/tilemaps/synth2.tmx"}
+    {type:"tmx", src:"res/tilemaps/synth2.tmx"},
+     {type:"tmx", src:"res/tilemaps/synth3.tmx"},
+    {type:"tmx", src:"res/tilemaps/synth4.tmx"},
+     {type:"tmx", src:"res/tilemaps/synth5.tmx"},
+    {type:"tmx", src:"res/tilemaps/synth6.tmx"},
+     {type:"tmx", src:"res/tilemaps/synth7.tmx"},
+    {type:"tmx", src:"res/tilemaps/synth8.tmx"},
+     {type:"tmx", src:"res/tilemaps/synth9.tmx"},
+    {type:"tmx", src:"res/tilemaps/synth10.tmx"}
     //bgm
 
     //effect

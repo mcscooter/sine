@@ -5,21 +5,28 @@ var SCEnd = cc.Layer.extend({
     isMouseDown:false,
 
     init:function () {
-    
     	
-        cc.log("SCSceneManager.js init()");
+    	this.gameConfig = new SCGameConfig();
+    	
+        cc.log("SCEndScene.js init()");
         
         this._super();
         var selfPointer = this;
         var size = cc.Director.getInstance().getWinSize();
         this.setTouchEnabled(true);
    
-        var testSprite = cc.Sprite.create("res/HelloWorld.png");
-        testSprite.setPosition(cc.p(10, 10));
-        this.addChild(testSprite, 1);
+        var level = cc.Director.getInstance().gameConfig.sessionData.level;
+   
+        cc.Director.getInstance().gameConfig.sessionData.level = 1;
+   
+   
+        
+   
+        var background = new cc.Sprite(this.gameConfig.gameEndScene.backgroundTexture);     
+    	background.setPosition(this.gameConfig.gameMenuScene.backgroundPosition);
+    	this.addChild(background, -999, this.gameConfig.globals.TAG_MENU_BACKGROUND);
       
-        var director = cc.Director.getInstance();
-        director.replaceScene(new Level1);
+        
                 
         return true;
     },
@@ -37,6 +44,12 @@ var SCEnd = cc.Layer.extend({
     },
     onTouchesEnded:function (touches, event) {
         this.isMouseDown = false;
+        var director = cc.Director.getInstance();
+        //cc.AnimationCache.purgeSharedAnimationCache();
+        //cc.SpriteFrameCache.purgeSharedSpriteFrameCache();
+        //cc.TextureCache.purgeSharedTextureCache();
+        //director.purgeDirector();
+        director.replaceScene(new Level1);
     },
     onTouchesCancelled:function (touches, event) {
     }
