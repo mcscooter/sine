@@ -58,6 +58,11 @@ var SCGameConfig = cc.Class.extend({
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth1.tmx",
 	   						"position":cc.p(0,0)
+	   					},
+	   					level2:{ 	
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth2.tmx",
+	   						"position":cc.p(0,0)
 	   					}
    					};
    					
@@ -86,6 +91,7 @@ var SCGameConfig = cc.Class.extend({
 						"MSG_MAP_TOUCHED":3,
 						"MSG_INPUT_CHANGED":4,
 						"MSG_TIME_OVER":5,
+						"MSG_END_LEVEL":6,
 						"TAG_TILE_MAP":1, 
 						"TAG_MEDIATOR":2,
 						"TAG_PLAYER":3,

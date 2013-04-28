@@ -32,10 +32,12 @@ var SCBox2dLayer = cc.Layer.extend({
 	ctor:function () {
 		this._super();
         this.gameConfig = new SCGameConfig();
-        this.synth = null;        
+        this.synth = null;
+        this.globalMediator = null;   
+        this.parentScene = null;     
     },
     
-    initWithMap:function(map, synth){
+    initWithMap:function(map, synth, mediator, scene){
         var b2Vec2 = Box2D.Common.Math.b2Vec2
             , b2BodyDef = Box2D.Dynamics.b2BodyDef
             , b2Body = Box2D.Dynamics.b2Body
@@ -51,15 +53,14 @@ var SCBox2dLayer = cc.Layer.extend({
         this.world.SetContinuousPhysics(true);
         
         this.synth = synth;
+        
+        this.globalMediator = mediator;
+        
+        this.parentScene = scene;
 
         // listen for beginning of all body collisions
         var listener = new Box2D.Dynamics.b2ContactListener;
         listener.BeginContact = function(contact) {
-         	//this.handleCollision(contact);
-         	 //cc.log("SCBox2DLayer listener.BeginContact() body A = ");
-         	// cc.log(contact.GetFixtureA().GetBody().GetUserData());  
-         	// cc.log("SCBox2DLayer listener.BeginContact() body B = ");
-         	// cc.log(contact.GetFixtureB().GetBody().GetUserData());
          	 
          	 var gameConfig = new SCGameConfig();
          	 
@@ -70,6 +71,11 @@ var SCBox2dLayer = cc.Layer.extend({
 	         	// cc.log("userDataA.ID == TAG_PLAYER");
 	         	 if(userDataB){
 	         	 	userDataB.playNote = true;
+	         	 	if(userDataB.goal){
+		         	 	cc.log("End Level");
+		         	 	userDataB.endLevel = true;
+		         	 	
+	         	 		}
 	         	 	}
          	 }
          	 
@@ -77,6 +83,11 @@ var SCBox2dLayer = cc.Layer.extend({
 	         	 //cc.log("userDataB.ID == TAG_PLAYER");
 	         	 if(userDataA){
 	         	 	userDataA.playNote = true;
+	         	 	
+	         	 if(userDataA.goal){
+		         	 	cc.log("End Level");
+		         	 	userDataA.endLevel = true;
+	         	 		}
 	         	 	}
          	 } 
          	 
@@ -130,6 +141,23 @@ var SCBox2dLayer = cc.Layer.extend({
         
         cc.log("Box2DTest Finished CTOR");
 
+    },
+    
+    
+    setUpWorldWithMap:function(map){
+	    
+	     var b2Vec2 = Box2D.Common.Math.b2Vec2
+            , b2BodyDef = Box2D.Dynamics.b2BodyDef
+            , b2Body = Box2D.Dynamics.b2Body
+            , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+            , b2World = Box2D.Dynamics.b2World
+            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
+            
+            this.makeTiles(map, false, cc.p(-100,-110), cc.p(30,20));
+       
+	    
+	    
     },
     
     
@@ -223,12 +251,20 @@ var SCBox2dLayer = cc.Layer.extend({
 			       	// Attach body to world
 			       	bodyDef.position.Set(pos.x + this.gameConfig.Box2dLayer.tileBox.center, pos.y + this.gameConfig.Box2dLayer.tileBox.center);
 			       	
+			       	bodyDef.userData = new SCEntity();
+			       	bodyDef.userData.ID = this.gameConfig.globals.TAG_BOX2D_STATIC;
+			       	
 			       	if(tileProps && tileProps.note){
 			       		cc.log("SCBox2DLayer makeTiles() note = " + tileProps.note);
-			       		bodyDef.userData = new SCEntity();
 			       		bodyDef.userData.note = tileProps.note;
 			       		bodyDef.userData.playNote = false;
-			       		bodyDef.userData.ID = this.gameConfig.globals.TAG_BOX2D_STATIC;
+			       	}
+			       	if(tileProps && tileProps.goal){
+			       		cc.log("SCBox2DLayer makeTiles() goal = " + tileProps.goal);
+			       		bodyDef.userData.goal = tileProps.goal;
+			       		// used for passing end level message back up out of Box2D. Not a good model, but I gotsta get this done in 48 hours!
+			       		bodyDef.userData.endLevel = false;
+			       		
 			       	}
 				   	this.world.CreateBody(bodyDef).CreateFixture(fixDef);    
 			       }
@@ -422,13 +458,7 @@ var SCBox2dLayer = cc.Layer.extend({
 	                		cc.log("SCBox2DLayer shoot()");
 	                		//var force = new b2Vec2(2,10);
 	                		var rawVect = cc.p((target.x-origin.x)/100,(target.y-origin.y)/100);
-	                		var vectPercent;
-	                		var forceFactor = 10;
-	                		if(rawVect.x >= rawVect.y){
-	                			vectPercent = cc.p(1.0 - rawVect.y / rawVect.x ,rawVect.y / rawVect.x);
-	                		}else{
-	                			vectPercent = cc.p(1.0 - rawVect.x / rawVect.y ,rawVect.x / rawVect.y);
-	                		}
+	                		var forceFactor = 30;
 	                		var force = new b2Vec2(forceFactor * (rawVect.x / (Math.abs(rawVect.x) + Math.abs(rawVect.y))), forceFactor * (rawVect.y / (Math.abs(rawVect.x) + Math.abs(rawVect.y))));
 	                		cc.log("SCBox2DLayer shoot() vel.x/y = " + force.x + " " + force.y);
 	                		b.SetAwake(true);
@@ -469,6 +499,10 @@ var SCBox2dLayer = cc.Layer.extend({
 	                //cc.log("SCBox2DLayer update() ActorID = " + myActor.ID + " note = " + myActor.note);
 	                this.synth.playNote(myActor.note);
 	                myActor.playNote = false;
+                }
+                
+                if(myActor.endLevel){
+	                this.endLevel();
                 }
                 
                 // if it is the player -- needs to be moved to player entity
@@ -522,7 +556,7 @@ var SCBox2dLayer = cc.Layer.extend({
          //this.setPosition(cc.p(this.getPosition().x + .3, this.getPosition().y + .3));
          //this.world.position.Set(2,2);
 
-    }
+    },
     /* enable to draw physics shapes on CC2D Canvas. Doesn't work correctly in CC2D currently (cc2D HTML5 2.1)
     draw:function (ctx) {
     	this.world.DrawDebugData();
@@ -530,6 +564,18 @@ var SCBox2dLayer = cc.Layer.extend({
     },
     */
     
+    endLevel:function(){
+	    cc.log("SCBox2DLayer endLevel()");
+	       	var args = new Object();
+	  		//var event = new SCEvent(this.gameConfig.globals.MSG_END_LEVEL, this, args);
+	  		//this.globalMediator.send(event);
+	  		//this.parentScene.endLevel(args);
+	  		//this.synth.destroy();
+	  		for (var b = this.world.GetBodyList(); b; b = b.GetNext()) {
+		  			//this.world.DestroyBody(b);
+	  			}
+	  		this.parentScene.endLevel(args);
+    }
     
 
 });

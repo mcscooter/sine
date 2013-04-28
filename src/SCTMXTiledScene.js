@@ -11,14 +11,18 @@ var SCTileLayer = cc.Layer.extend({
         this.setKeyboardEnabled(true);
         this.gameConfig = new SCGameConfig();
         this.iosSoundInitialized = false;
+        this.levelNumber = 1;
     },
-
+    
     // run when SCTileLayer is created
     onEnter:function () {
 
     	this._super();
     	// gets the size of the game. In points, not pixels.
     	var s = cc.Director.getInstance().getWinSize();
+    	    	
+    	// set up the listener and messaging mediator
+       	this.mediator = new SCMediator();
     	    	
     	// A layer for the moving graphics that is seperate from the HUD
     	this.gameLayer = new SCGameLayer();
@@ -44,14 +48,10 @@ var SCTileLayer = cc.Layer.extend({
        
         // Make a physics layer
         var physicsLayer = new SCBox2dLayer();
-        physicsLayer.initWithMap(tileMap, this.synth);
+        physicsLayer.initWithMap(tileMap, this.synth, this.mediator, this);
         physicsLayer.setPosition(this.gameConfig.Box2dLayer.position);
         this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
        
-       
-       
-        // set up the listener and messaging mediator
-       	this.mediator = new SCMediator();
        	
        	// handles keyboard input, will move touch to this eventually
        	this.inputHandler = new SCInputHandler();
@@ -128,6 +128,16 @@ var SCTileLayer = cc.Layer.extend({
        	var inputHandleStateEvent = new SCEvent(this.gameConfig.globals.MSG_INPUT_CHANGED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER));
        	var inputHandlerStateEventListener = new SCListener(inputHandleStateEvent, inputHandlerStateEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER));
        	this.mediator.register(inputHandlerStateEventListener);
+       	
+       	
+       	
+       	
+       	/*
+       	var endLevelCallback = function(args){this.endLevel(args);};
+       	var endLevelEvent = new SCEvent(this.gameConfig.globals.MSG_END_LEVEL, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LEVEL));
+       	var endLevelEventListener = new SCListener(endLevelEvent, endLevelCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER));
+       	this.mediator.register(endLevelEventListener);
+       	*/
      	
      	// set all hitboxes to draw or not.
      	this.setEntityDrawHitboxes(this.gameConfig.debug.drawHitboxes);
@@ -209,70 +219,6 @@ var SCTileLayer = cc.Layer.extend({
     	this.inputHandler.keyDown(e);   
     },
     
-    // test the Web Audio API synth functionality
-    testWebAudioSynth:function (){
-	  cc.log("SCTMXTiledScene.js testWebAudioSynth()");  
-	  
-	  try {
-    		myAudioContext = new webkitAudioContext();
-    	}
-    	catch(e) {
-    		alert('Web Audio API is not supported! Try Chrome browser!!!');
-    	}
-	    
-	// Try setting up an effects chain    
-	// connection point for all voices
-	effectChain = myAudioContext.createGainNode();
-
-	//Reverb
-    revNode = myAudioContext.createGainNode();
-
-    // gain for reverb
-	revGain = myAudioContext.createGainNode();
-	revGain.gain.value = 0.1;
-
-	// gain for reverb bypass.  Balance between this and the previous = effect mix.
-	revBypassGain = myAudioContext.createGainNode();
-
-	// overall volume control node
-    volNode = myAudioContext.createGainNode();
-    volNode.gain.value = 0.25;
-
-    effectChain.connect( revNode );
-    effectChain.connect( revBypassGain );
-    revNode.connect( revGain );
-    revGain.connect( volNode );
-    revBypassGain.connect( volNode );
-
-    // hook it up to the "speakers"
-    volNode.connect( myAudioContext.destination );
-    
-    
-    
-    // test oscillator
-    	var source = myAudioContext.createOscillator();
-	    source.type = 0; // sine wave
-	    source.envelope = myAudioContext.createGain();
-	    source.connect(source.envelope);
-	    source.envelope.connect(effectChain);
-	    
-	    // This is the "initial patch" of the ADSR settings.  YMMV.
-	    var currentEnvA = 1;
-	    var currentEnvD = 1;
-	    var currentEnvS = 10;
-	    var currentEnvR = 10;
-	    
-	    // set up the volume ADSR envelope
-	    var now = myAudioContext.currentTime;
-	    var envAttackEnd = now + (currentEnvA/10.0);
-
-	    source.envelope.gain.setValueAtTime( 0.0, now );
-	    source.envelope.gain.linearRampToValueAtTime( 1.0, envAttackEnd );
-	    source.envelope.gain.setTargetValueAtTime( (currentEnvS/100.0), envAttackEnd, (currentEnvD/100.0)+0.001 );
-
-	    source.noteOn(0);
-	    
-    },
     
     // make a player, initialize, add to layer
     initPlayer:function (){
@@ -335,6 +281,35 @@ var SCTileLayer = cc.Layer.extend({
 	    this.updateRender();
 	    this.updateHUD(dt);
       },
+      
+   endLevel:function(args){
+	    cc.log("SCTMXTiledScene endLevel()");
+	    //var director = cc.Director.getInstance();
+	    	//director.replaceScene(new Level1);
+	    //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP).removeChild();
+	    //this.gameLayer.removeChild(this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP));
+	    if(this.levelNumber == 1){
+		    this.loadLevel2();
+	    }
+	    this.levelNumber++;
+    },
+    
+    loadLevel2:function(){
+	    cc.log("SCTMXTiledScene loadLevel2()");
+	    //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP).initWithTMXFile(this.gameConfig.maps.level2.filename);
+	    
+	    // Make a map from a Tiled map file. If there are problems here check the compression on the file from within Tiled.
+    	var tileMap = new SCTileMap();
+        tileMap.initWithTMXFile(this.gameConfig.maps.level2.filename);
+        tileMap.setPosition(this.gameConfig.maps.level2.position);
+        this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
+        
+        
+        this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).setUpWorldWithMap(tileMap, this.synth, this.mediator, this);
+        //this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).setPosition(this.gameConfig.Box2dLayer.position);
+        //this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
+	    
+    },
     
     setEntityDrawHitboxes:function(drawHitboxes){
 	    for(var i=0; i<entities.length; i++){

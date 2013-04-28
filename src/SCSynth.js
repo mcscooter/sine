@@ -146,11 +146,24 @@ var SCSynth = cc.Class.extend({
 	  	}  
     },
     
-    
-        
-        
-        
-        
+    destroy:function(){
+		this.lowPassFilter.disconnect(0);
+		this.effectChain.disconnect(0);
+    	this.revNode.disconnect(0);
+    	this.revGain.disconnect(0);
+		this.revBypassGain.disconnect(0);;
+    	this.volNode.disconnect(0);
+    	this.volNode.disconnect(0);
+    	for(var i = 0; i < this.voices.length; i++){
+	    	if(this.voices[i]){
+		    	this.voices[i].disconnect(0);
+	    	}
+    	}
+    	//this.audioContext.destination.disconnect();
+		//this.audioContext = null;
+	    
+    },
+      
     update:function (){
 	    
 	    

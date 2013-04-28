@@ -66,7 +66,8 @@ var g_ressources = [
     //tmx
    // {type:"tmx", src:"res/tilemaps/test-tilemap.tmx"},
    // {type:"tmx", src:"res/tilemaps/ortho-tile-property.tmx"}
-    {type:"tmx", src:"res/tilemaps/synth1.tmx"}
+    {type:"tmx", src:"res/tilemaps/synth1.tmx"},
+    {type:"tmx", src:"res/tilemaps/synth2.tmx"}
     //bgm
 
     //effect
