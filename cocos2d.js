@@ -64,6 +64,7 @@
             'src/SCTMXTiledScene.js',
             'src/SCSceneManager.js',
             'src/SCGameMenu.js',
+            'src/SCInstructions.js',
             'src/SCEndScene.js',
             'src/SCGameInit.js',
             'src/Box2dTest.js'

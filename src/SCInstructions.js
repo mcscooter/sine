@@ -1,4 +1,4 @@
-var SCGameMenu = cc.Layer.extend({
+var SCInstructions = cc.Layer.extend({
     isMouseDown:false,
 
     onEnter:function () {
@@ -17,8 +17,8 @@ var SCGameMenu = cc.Layer.extend({
         this.gameConfig  = new SCGameConfig();
         
         
-        var background = new cc.Sprite(this.gameConfig.gameMenuScene.backgroundTexture);     
-    	background.setPosition(this.gameConfig.gameMenuScene.backgroundPosition);
+        var background = new cc.Sprite(this.gameConfig.gameInstructionsScene.backgroundTexture);     
+    	background.setPosition(this.gameConfig.gameInstructionsScene.backgroundPosition);
     	this.addChild(background, -999, this.gameConfig.globals.TAG_MENU_BACKGROUND);
         /*
         var title = new cc.Sprite(this.gameConfig.gameMenuScene.titleTexture);     
@@ -80,16 +80,16 @@ var SCGameMenu = cc.Layer.extend({
         cc.SpriteFrameCache.purgeSharedSpriteFrameCache();
         cc.TextureCache.purgeSharedTextureCache();
         //director.purgeDirector();
-        director.replaceScene(new SCInstructionsScene);
+        director.replaceScene(new Level1);
         cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
     }
 });
 
 // This is called in main.js to load the main game menu
-var SCGameMenuScene = cc.Scene.extend({
+var SCInstructionsScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
-        var layer = new SCGameMenu();
+        var layer = new SCInstructions();
        // layer.init();
         this.addChild(layer);
     }

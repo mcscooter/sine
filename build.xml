@@ -153,6 +153,7 @@
                 <file name="src/SCTMXTiledScene.js"/>
                 <file name="src/SCGameInit.js"/>
                 <file name="src/SCGameMenu.js"/>
+                <file name="src/SCInstructions.js"/>
                 <file name="src/SCEndScene.js"/>
                 <file name="src/SCSceneManager.js"/>
                 <file name="main.js"/>

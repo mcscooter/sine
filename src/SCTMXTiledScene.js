@@ -34,6 +34,8 @@ var SCTileLayer = cc.Layer.extend({
     	this.HUDLayer.setPosition(cc.p(0,0));
     	this.addChild(this.HUDLayer, 999, this.gameConfig.globals.TAG_HUDLAYER);
     	
+    	this.score = new SCScore();
+    	this.totalScore = new SCScore();
     	
     	var tileMap = this.loadTileMap();
     	this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
@@ -47,7 +49,7 @@ var SCTileLayer = cc.Layer.extend({
        
         // Make a physics layer
         var physicsLayer = new SCBox2dLayer();
-        physicsLayer.initWithMap(tileMap, this.synth, this.mediator, this);
+        physicsLayer.initWithMap(tileMap, this.synth, this.mediator, this, this.score, this.totalScore);
         physicsLayer.setPosition(this.gameConfig.Box2dLayer.position);
         this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
        
@@ -90,16 +92,25 @@ var SCTileLayer = cc.Layer.extend({
        	*/
        	
        	
-       	this.timer = new SCTimer();
-       	this.timer.setPosition(this.gameConfig.timer.position);
-       	entities.push(this.timer);
-       	this.HUDLayer.addChild(this.timer, 95, this.gameConfig.globals.TAG_TIMER);
+       	//this.timer = new SCTimer();
+       	//this.timer.setPosition(this.gameConfig.timer.position);
+       //	entities.push(this.timer);
+       	//this.HUDLayer.addChild(this.timer, 95, this.gameConfig.globals.TAG_TIMER);
        	
-       	this.score = new SCScore();
+       	
        	this.score.setPosition(this.gameConfig.score.position);
+       	this.score.setScoreLabel("Level Score ");
         entities.push(this.score);
        	this.HUDLayer.addChild(this.score, 96, this.gameConfig.globals.TAG_SCORE);
        	
+       	
+       	this.totalScore.setPosition(this.gameConfig.totalScore.position);
+       	this.totalScore.setScore(cc.Director.getInstance().gameConfig.sessionData.score);
+       	this.totalScore.setScoreLabel("Total Score ");
+       	entities.push(this.totalScore);
+       	this.HUDLayer.addChild(this.totalScore, 96, this.gameConfig.globals.TAG_TOTAL_SCORE);
+       	
+       	/*
        	this.customer = new SCCustomer();
        	this.customer.setPosition(this.gameConfig.customer.position);
         entities.push(this.customer);
@@ -110,6 +121,7 @@ var SCTileLayer = cc.Layer.extend({
        	this.sign.setPosition(this.gameConfig.sign.position);
         entities.push(this.sign);
        	this.HUDLayer.addChild(this.sign, 96, this.gameConfig.globals.TAG_PRICE);
+       	*/
        
     /*
        	// Register callbacks
@@ -260,10 +272,11 @@ var SCTileLayer = cc.Layer.extend({
     },
     
     updateHUD:function(dt){  
-      	this.timer.update(dt);
+      	//this.timer.update(dt);
 	    this.score.update();
-	    this.customer.update();
-	    this.sign.update();
+	    this.totalScore.update();
+	    //this.customer.update();
+	    //this.sign.update();
     },
     
     //callback for the time being over
@@ -310,6 +323,7 @@ var SCTileLayer = cc.Layer.extend({
 	    if(level < 2){
         	var director = cc.Director.getInstance();
         	cc.Director.getInstance().gameConfig.sessionData.level += 1;
+        	cc.Director.getInstance().gameConfig.sessionData.score = this.totalScore.getScore();
         	cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
         	cc.AnimationCache.purgeSharedAnimationCache();
         	cc.SpriteFrameCache.purgeSharedSpriteFrameCache();
@@ -318,6 +332,7 @@ var SCTileLayer = cc.Layer.extend({
         }else{
 	        var director = cc.Director.getInstance();
         	cc.Director.getInstance().gameConfig.sessionData.level += 1;
+        	cc.Director.getInstance().gameConfig.sessionData.score = this.totalScore.getScore();
         	cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
         	cc.AnimationCache.purgeSharedAnimationCache();
         	cc.SpriteFrameCache.purgeSharedSpriteFrameCache();

@@ -26,7 +26,25 @@ var SCEnd = cc.Layer.extend({
     	background.setPosition(this.gameConfig.gameMenuScene.backgroundPosition);
     	this.addChild(background, -999, this.gameConfig.globals.TAG_MENU_BACKGROUND);
       
-        
+    	// add round score and best score
+    	this.score = new SCScore();
+        this.score.setPosition(this.gameConfig.gameEndScene.totalScorePosition);
+       	this.score.setScoreLabel("Score   ");
+       	this.score.setFontSize(48);
+        this.score.setScore(cc.Director.getInstance().gameConfig.sessionData.score);
+       	this.addChild(this.score, 96, this.gameConfig.globals.TAG_SCORE);
+       	this.score.update();
+       	
+       	this.bestScore = new SCScore();
+        this.bestScore.setPosition(this.gameConfig.gameEndScene.bestScorePosition);
+       	this.bestScore.setScoreLabel("Best Score   ");
+       	this.bestScore.setFontSize(48);
+        if(cc.Director.getInstance().gameConfig.sessionData.score < cc.Director.getInstance().gameConfig.sessionData.bestScore){
+        		 cc.Director.getInstance().gameConfig.sessionData.bestScore =  cc.Director.getInstance().gameConfig.sessionData.score
+        	}
+        this.bestScore.setScore(cc.Director.getInstance().gameConfig.sessionData.bestScore);
+       	this.addChild(this.bestScore, 96, this.gameConfig.globals.TAG_BEST_SCORE);
+       	this.bestScore.update();
                 
         return true;
     },
@@ -43,6 +61,8 @@ var SCEnd = cc.Layer.extend({
         }
     },
     onTouchesEnded:function (touches, event) {
+    
+    	cc.Director.getInstance().gameConfig.sessionData.score = 0;
         this.isMouseDown = false;
         var director = cc.Director.getInstance();
         //cc.AnimationCache.purgeSharedAnimationCache();

@@ -34,10 +34,12 @@ var SCBox2dLayer = cc.Layer.extend({
         this.gameConfig = new SCGameConfig();
         this.synth = null;
         this.globalMediator = null;   
-        this.parentScene = null;     
+        this.parentScene = null;  
+        this.score = null;
+        this.totalScore = null;   
     },
     
-    initWithMap:function(map, synth, mediator, scene){
+    initWithMap:function(map, synth, mediator, scene, score, totalScore){
         var b2Vec2 = Box2D.Common.Math.b2Vec2
             , b2BodyDef = Box2D.Dynamics.b2BodyDef
             , b2Body = Box2D.Dynamics.b2Body
@@ -57,6 +59,9 @@ var SCBox2dLayer = cc.Layer.extend({
         this.globalMediator = mediator;
         
         this.parentScene = scene;
+        
+        this.score = score;
+        this.totalScore = totalScore;
 
         // listen for beginning of all body collisions
         var listener = new Box2D.Dynamics.b2ContactListener;
@@ -512,6 +517,8 @@ var SCBox2dLayer = cc.Layer.extend({
 	                //cc.log("SCBox2DLayer update() ActorID = " + myActor.ID + " note = " + myActor.note);
 	                this.synth.playNote(myActor.note);
 	                myActor.playNote = false;
+	                this.score.incrementScore();
+	                this.totalScore.incrementScore();
                 }
                 
                 if(myActor.endLevel){

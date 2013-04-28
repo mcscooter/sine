@@ -120,7 +120,7 @@ var SCGameConfig = cc.Class.extend({
    		this.sessionData = {
 	   					"score":0,
 	   					"level":1,
-	   					"bestScore":0
+	   					"bestScore":9999999999
 	   				};
    					
    		this.Box2dLayer = {
@@ -165,7 +165,9 @@ var SCGameConfig = cc.Class.extend({
 						"TAG_CAR_ENTITY":14,
 						"TAG_BOX2D_LAYER":15,
 						"TAG_SPRITE_MANAGER":16,
-						"TAG_BOX2D_STATIC":17
+						"TAG_BOX2D_STATIC":17,
+						"TAG_TOTAL_SCORE":18,
+						"TAG_BEST_SCORE":19
    		};
    		
    		this.timer = {	
@@ -175,9 +177,16 @@ var SCGameConfig = cc.Class.extend({
    					};
    					
    		this.score = {	
-	   					"position":cc.p(200,440),
+	   					"position":cc.p(100,424),
 	   					"alignment":cc.TEXT_ALIGNMENT_LEFT
    					};
+   					
+   		this.totalScore = {	
+	   					"position":cc.p(700,424),
+	   					"alignment":cc.TEXT_ALIGNMENT_RIGHT
+   					};
+   					
+   					
    					
    		this.customer = {	
 	   					"position":cc.p(740,10)
@@ -195,10 +204,20 @@ var SCGameConfig = cc.Class.extend({
 	   					"menuPosition":cc.p(400,100)
    					};
    					
+   		this.gameInstructionsScene = {	
+	   					"backgroundTexture":cc.TextureCache.getInstance().addImage(s_instructionBG),
+	   					"backgroundTextureRect":cc.rect(0, 0, 800, 450),
+	   					"backgroundPosition":cc.p(400,225),
+	   					"totalScorePosition":cc.p(400,230),
+	   					"bestScorePosition":cc.p(400,140)	
+   					};
+   					
    		this.gameEndScene = {	
 	   					"backgroundTexture":cc.TextureCache.getInstance().addImage(s_endTempBG),
 	   					"backgroundTextureRect":cc.rect(0, 0, 800, 450),
-	   					"backgroundPosition":cc.p(400,225)
+	   					"backgroundPosition":cc.p(400,225),
+	   					"totalScorePosition":cc.p(400,230),
+	   					"bestScorePosition":cc.p(400,140)	
    					};
 
    					
