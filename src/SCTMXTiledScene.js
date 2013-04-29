@@ -190,7 +190,7 @@ var SCTileLayer = cc.Layer.extend({
     },
     onTouchBegan:function (touch, event) {
     	if(this.iosSoundInitialized == false){
-	    	//this.synth.playNote(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 40 + 10)));
+	    	this.synth.playNote(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 40 + 10)));
 	    	this.synth.changeLowPassFilterFrequency(Math.abs(Math.floor(touch.getLocation().x / cc.Director.getInstance().getWinSize().width * 12000)));
 	    	this.iosSoundInitialized = true;
 	    	}

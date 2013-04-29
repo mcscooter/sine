@@ -4742,7 +4742,7 @@
  </tileset>
  <layer name="physics" width="25" height="14">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA72USxaAIAhFKZdgpm2g7/731xs2QASjBneiR+7hPDAR0QwyKGABEUwgOd1Jb8YOuHqSw8sTjb1sYAcHOJUei2NlHJeiJ0sPGsfwoJZPK++Wh3NItUOHh3NYZ9aayRd5vJ2rv/bDe8896pfKmfe/dwOX1N+WeAUAAA==
+   H4sIAAAAAAAAAxNlYGAQRcPCQCwCZYsBsTgQSwCxJJly+PQwkYGxmYfPDmrZI0yiX9SBWAOINYFYi0h7SLFDDYsd2kT4iRQ/EGMHIxLGFT+E4puQPdjsICUtMRNhDzY7SE2zpMYJLeKD0nRFr/xB7XxODfMlGDDLQ3LLRHx6ADGV6Cl4BQAA
   </data>
  </layer>
 </map>

@@ -63,6 +63,7 @@ var SCGameConfig = cc.Class.extend({
 	   						
 	   						
 	   						
+	   						
 	   					},
 	   					level2:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
@@ -104,7 +105,7 @@ var SCGameConfig = cc.Class.extend({
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth8.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(240, 208)
+	   						"ballStart":cc.p(372, 206)
 	   					},
 	   					level9:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
@@ -128,7 +129,7 @@ var SCGameConfig = cc.Class.extend({
    					
    		this.Box2dLayer = {
 	   					"position":cc.p(0,0),
-	   					"debugDraw":true,
+	   					"debugDraw":false,
 	   					"PTM_RATIO":32,//point to meter ratio for Box2D
 	   					"gravityX":0,
 	   					"gravityY":0,
@@ -180,12 +181,12 @@ var SCGameConfig = cc.Class.extend({
    					};
    					
    		this.score = {	
-	   					"position":cc.p(100,424),
+	   					"position":cc.p(100,428),
 	   					"alignment":cc.TEXT_ALIGNMENT_LEFT
    					};
    					
    		this.totalScore = {	
-	   					"position":cc.p(700,424),
+	   					"position":cc.p(700,428),
 	   					"alignment":cc.TEXT_ALIGNMENT_RIGHT
    					};
    					
