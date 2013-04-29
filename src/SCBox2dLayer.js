@@ -382,7 +382,7 @@ var SCBox2dLayer = cc.Layer.extend({
        // fixtureDef.shape = dynamicBox;
        fixtureDef.shape = dynamicCircle;
         fixtureDef.density = 0.1;
-        fixtureDef.friction = 0.3;
+        fixtureDef.friction = 0.1;
         fixtureDef.restitution = .98;
         body.CreateFixture(fixtureDef);
 

@@ -74,10 +74,10 @@ var SCTileLayer = cc.Layer.extend({
     	player.setID(this.gameConfig.globals.TAG_PLAYER);
     	entities.push(player);
     	//physicsEntities.push(player);
-    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewEntity(this.gameConfig.player.startPosition,player);
+    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewEntity(this.getPlayerLevelStart(),player);
     	//this.gameLayer.addChild(player, 99, this.gameConfig.globals.TAG_PLAYER);
        	//physicsLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
-       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
+       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.getPlayerLevelStart());
        	
        	/*
        	// Make a car entity
@@ -213,7 +213,7 @@ var SCTileLayer = cc.Layer.extend({
     	var tileTouchedY = Math.floor(mapSize.height - mapTouchLocation.y / tileSize.height); // Because Tiled maps register in the top left corner rather than bottom left
     	var tileCoord = cc.p(tileTouchedX, tileTouchedY);
     	
-    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).shoot(touchLocation, this.gameConfig.player.startPosition);	
+    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).shoot(touchLocation, this.getPlayerLevelStart());	
     
     },
     onTouchCancelled:function (touch, event) {
@@ -226,10 +226,10 @@ var SCTileLayer = cc.Layer.extend({
     
     // Keyboard handling
     onKeyUp:function(e){ 	
-	    this.inputHandler.keyUp(e);
+	    //this.inputHandler.keyUp(e);
     },
     onKeyDown:function(e){
-    	this.inputHandler.keyDown(e);   
+    	//this.inputHandler.keyDown(e);   
     },
     
     
@@ -320,7 +320,7 @@ var SCTileLayer = cc.Layer.extend({
 	    
 	    var level = cc.Director.getInstance().gameConfig.sessionData.level;
 	    
-	    if(level < 2){
+	    if(level < 10){
         	var director = cc.Director.getInstance();
         	cc.Director.getInstance().gameConfig.sessionData.level += 1;
         	cc.Director.getInstance().gameConfig.sessionData.score = this.totalScore.getScore();

@@ -59,61 +59,64 @@ var SCGameConfig = cc.Class.extend({
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth1.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(116, 208)
+	   						
+	   						
+	   						
 	   					},
 	   					level2:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth2.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(116, 240)
 	   					},
 	   					level3:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth3.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(86, 90)
 	   					},
 	   					level4:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth4.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(112, 310)
 	   					},
 	   					level5:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth5.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(492, 304)
 	   					},
 	   					level6:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth6.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(682, 332)
 	   					},
 	   					level7:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth7.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(118, 208)
 	   					},
 	   					level8:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth8.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(240, 208)
 	   					},
 	   					level9:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth9.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(206, 240)
 	   					},
 	   					level10:{ 	
 	   						//"filename":"res/tilemaps/test-tilemap.tmx",
 	   						"filename":"res/tilemaps/synth10.tmx",
 	   						"position":cc.p(0,0),
-	   						"ballStart":cc.p(272, 224)
+	   						"ballStart":cc.p(116, 208)
 	   					}
    					};
    					
