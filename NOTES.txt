@@ -1,0 +1,135 @@
+NEXT STEPS:
+
+
+Move player physics logic to player entity
+
+
+New design pattern to try:
+- Read from tile map but do not display?????
+- Make phyiscs shapes for everything with graphics attached
+- Keep shapes for everything that is close to the screen
+- When player moves, check to see how far since last physics update. If far enough, check all active shapes for how close they are to screen. Release far away. Add ones close enough.
+
+- What to do about non-physics graphics?
+
+
+
+
+
+--------------------------------------------------------
+
+function for determining what shapes are needed in an area
+- reads from tiled, gets all shapes
+
+function for determining what already exists in as area (or just on stage?)
+- cycle through arrays that hold info on what is there.
+
+function for determining what is needed
+- calls previous functions and compares the lists
+
+function for determining what shapes are out of bounds
+- cycle through arrays of stuff on stage, see what is out of area
+
+
+would probably need to initially not use tile sinching for longer shapes. Might add that back later.
+
+--------------------------------------------------------
+
+
+Add 
+
+
+- Use Box2D for solid collision and moving entities.
+- Use own tile physics loop for soft tile collisions. --- Scratch, should probably use BOX2D sensors instead
+
+- Get box2d collisions to generate game callbacks
+
+
+
+
+
+- Old next steps from own collision:
+
+Make collision correction dependant on previous location and velocity
+Give all entities an ID (tag)
+Make array of entities to loop through
+Remove each entity as you go through loop
+
+
+
+
+
+Make non-tile entities with physics (Hoppy physics can help) If moving diagonally and blocked in one direction, still go in other direction (slide)
+- Collision with player causes message and cc.log from callback
+- Player push at full speed
+- Entity slows player with force
+- Entity collides with map
+- Entity collides with all entities
+- Resolve complex collisions
+- Diagonal Movement
+- Give Entities collision states (including player)
+
+
+O--------O
+|        |
+|     O--|--O
+|     |  |  |
+|     O--|--O
+|        |
+O--------O
+
+
+ADD ENTITY LOGIC:
+- Drive in a direction.
+- If hit wall, turn
+
+
+
+Make custom loading scene or overlay for in between levels
+
+
+Make load and end scene - NOTE: Commented out game menu code in SCGameMenu calls the playGame method on load for some reason.
+
+Make the scene manager work properly
+
+Make touch friendly movement and UI
+
+
+Make custom loader scene for beginning.
+- http://www.freeformatter.com/base64-encoder.html
+- https://github.com/cocos2d/cocos2d-html5/blob/master/cocos2d/CCLoader.js
+look for this._logoTexture
+Put into config file
+Extend cc.Loader?????
+
+
+
+
+
+
+give each entity a Mediator to broadcast events only to itself???
+
+Add tracing messages that are rebroadcast, number of listeners and list of them, ability to turn logging on/off
+
+add proper player movement using physics, velocity, etc
+
+add physics logic with a loop that is passed the list of all game entities. No gravity for now, but can add later. 
+
+
+player has a moveTO function like grave peril?
+
+
+- Make the map / payer movement and animation work on events / messages
+
+- Need to be able to pass listeners and callbacks back to the mediator when a message is sent from it
+- test the message system a lot
+
+-- 
+
+- MAKE ALL THIS BASED ON THE MESSAGE SYSTEM
+- Basic player movement (tap to move only or hold to move?)
+- Basic tile map meta data layer read in (movement only)
+- Player movement based on tile map meta data
+- 
+
+
