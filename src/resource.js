@@ -24,7 +24,7 @@ var s_MenuAbout = "res/images/menu/about.png";
 var s_MenuSite = "res/images/menu/site.png";
 var s_MenuTitle = "res/images/menu/title.png";
 
-var s_instructionBG = "res/images/menu/Instructions.png";
+var s_instructionBG = "res/images/menu/instructions.png";
 
 var s_endBG = "res/images/menu/end-screen.png";
 var s_endTempBG = "res/images/menu/end-screen.png";

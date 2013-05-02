@@ -320,7 +320,9 @@ var SCTileLayer = cc.Layer.extend({
 	    
 	    var level = cc.Director.getInstance().gameConfig.sessionData.level;
 	    
-	    if(level < 10){
+	 
+		if(level < 10){
+	    
         	var director = cc.Director.getInstance();
         	cc.Director.getInstance().gameConfig.sessionData.level += 1;
         	cc.Director.getInstance().gameConfig.sessionData.score = this.totalScore.getScore();
@@ -330,6 +332,14 @@ var SCTileLayer = cc.Layer.extend({
         	cc.TextureCache.purgeSharedTextureCache();
         	director.replaceScene(new Level1);
         }else{
+        	
+        	   try{
+	        	   _gaq.push(['_trackEvent', 'Game End', 'Score', 'score = ' + this.totalScore.getScore()]);
+	        	   }
+	        	catch(e){
+		        	cc.log("GA Event Fail, SCTMXTiledScene endLevel()");
+		       }
+	        
 	        var director = cc.Director.getInstance();
         	cc.Director.getInstance().gameConfig.sessionData.level += 1;
         	cc.Director.getInstance().gameConfig.sessionData.score = this.totalScore.getScore();
@@ -353,6 +363,13 @@ var SCTileLayer = cc.Layer.extend({
 	    
 	    // Make a map from a Tiled map file. If there are problems here check the compression on the file from within Tiled.
     	var tileMap = new SCTileMap();
+	    
+	    try{
+	    	_gaq.push(['_trackEvent', 'Level Start', 'Level = ' + level]);
+    	}
+    	catch(e){
+    		cc.log("GA Event Fail, SCTMXTiledScene loadTileMap()");
+    	}
 	    
 	    if(level == 1){
 		   tileMap.initWithTMXFile(this.gameConfig.maps.level1.filename);

@@ -72,7 +72,12 @@ var SCGameMenu = cc.Layer.extend({
     		cc.log("SCGameMenu Cannot create gameConfig for cc.Director.sharedInstance()");	
     	}
     	
-    	
+    	try{
+	    	_gaq.push(['_trackEvent', 'Game Menu', 'Game Started']);
+    	}
+    	catch(e){
+    		cc.log("GA Event Fail, SCGameMenuScene");
+    	}
     	
         //var director = cc.Director.getInstance();
         cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
