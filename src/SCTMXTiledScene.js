@@ -322,7 +322,7 @@ var SCTileLayer = cc.Layer.extend({
 	    
 	 
 		if(level < 10){
-	    
+	    	this.synth.sendNoteGoogleEvent(cc.Director.getInstance().gameConfig.sessionData.level);
         	var director = cc.Director.getInstance();
         	cc.Director.getInstance().gameConfig.sessionData.level += 1;
         	cc.Director.getInstance().gameConfig.sessionData.score = this.totalScore.getScore();
@@ -339,7 +339,7 @@ var SCTileLayer = cc.Layer.extend({
 	        	catch(e){
 		        	cc.log("GA Event Fail, SCTMXTiledScene endLevel()");
 		       }
-	        
+	        this.synth.sendNoteGoogleEvent(cc.Director.getInstance().gameConfig.sessionData.level);
 	        var director = cc.Director.getInstance();
         	cc.Director.getInstance().gameConfig.sessionData.level += 1;
         	cc.Director.getInstance().gameConfig.sessionData.score = this.totalScore.getScore();

@@ -10,6 +10,7 @@ var SCSynth = cc.Class.extend({
     	this.gameConfig = new SCGameConfig();
     	this.voices = null;
     	this.voiceCounter = 0;
+    	this.noteTracker = new Array();
     },
     
     init:function (){
@@ -70,6 +71,8 @@ var SCSynth = cc.Class.extend({
 	  	//var voiceNum = this.voiceCounter % this.gameConfig.synth.instrument1.numVoices;
 	  
 	  	//this.voices[voiceNum].noteOff(0)
+	  	
+	  	this.noteTracker.push(note);
 	  	
 	  	if(this.voices[note] == null){
 	  		cc.log("SCSynth playNote(note) this.voices[" + note + "] == null");
@@ -139,6 +142,23 @@ var SCSynth = cc.Class.extend({
 	  	if(mediator){
 		  	this.globalmediator = mediator;
 	  	}  
+    },
+    
+    sendNoteGoogleEvent:function(level){
+    	
+    	var notes = "";
+    	
+    	while(this.noteTracker.length > 0){
+	    	notes = notes + "note=" + this.noteTracker[0];
+	    	this.noteTracker.shift();
+    	}
+    	
+	    try{
+	    	_gaq.push(['_trackEvent', 'Level Notes', 'Level = ' + level, notes]);
+    	}
+    	catch(e){
+    		cc.log("GA Event Fail, SCSynth sendNoteGoogleEvent()");
+    	}
     },
     
     destroy:function(){
