@@ -303,8 +303,9 @@ var SCBox2dLayer = cc.Layer.extend({
 		   var  object = objectGroup[key];
 		   
 		   cc.log(object);
-		   cc.log(object.test);
-		   cc.log(object.number);
+		   cc.log("Object note = " + object.note)
+		   cc.log("Object position = " + object.x + " " + object.y);
+		   cc.log("Object size = " + object.width + " " + object.height);
 		}
 	    
     },
