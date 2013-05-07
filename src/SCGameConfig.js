@@ -129,7 +129,7 @@ var SCGameConfig = cc.Class.extend({
    					
    		this.Box2dLayer = {
 	   					"position":cc.p(0,0),
-	   					"debugDraw":false,
+	   					"debugDraw":true,
 	   					"PTM_RATIO":32,//point to meter ratio for Box2D
 	   					"gravityX":0,
 	   					"gravityY":0,

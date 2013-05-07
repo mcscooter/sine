@@ -292,6 +292,17 @@ var SCBox2dLayer = cc.Layer.extend({
         }
         
         
+        var fixDef = new b2FixtureDef;
+        	fixDef.density = this.gameConfig.Box2dLayer.tileBox.density;
+        	fixDef.friction = this.gameConfig.Box2dLayer.tileBox.friction;
+        	fixDef.restitution = this.gameConfig.Box2dLayer.tileBox.restitution;
+        var bodyDef = new b2BodyDef;
+			           
+        
+        var square = new b2PolygonShape;
+
+        
+        
         // Get the object layer objects
         var objectGroup = map.getObjectLayerProperties("object-layer");
         
@@ -306,6 +317,22 @@ var SCBox2dLayer = cc.Layer.extend({
 		   cc.log("Object note = " + object.note)
 		   cc.log("Object position = " + object.x + " " + object.y);
 		   cc.log("Object size = " + object.width + " " + object.height);
+		   
+		   // if it's a circle, make a circle
+		   if(object && object.type && object.type == "circle"){
+		   		cc.log("Make a circle!!!");
+		   		var circle = new b2CircleShape((object.width / 2) / this.gameConfig.Box2dLayer.PTM_RATIO);
+			   bodyDef.type = b2Body.b2_staticBody;
+			   fixDef.shape = circle;
+			   
+			   // Attach body to world
+			   bodyDef.position.Set(object.x / this.gameConfig.Box2dLayer.PTM_RATIO + ((object.width / 2) / this.gameConfig.Box2dLayer.PTM_RATIO), object.y / this.gameConfig.Box2dLayer.PTM_RATIO + ((object.height / 2) / this.gameConfig.Box2dLayer.PTM_RATIO));
+			   
+			   //bodyDef.position.Set(4 + this.gameConfig.Box2dLayer.tileBox.center, 4 + this.gameConfig.Box2dLayer.tileBox.center);
+			    
+			   this.world.CreateBody(bodyDef).CreateFixture(fixDef);   	
+			   
+		   }
 		}
 	    
     },
@@ -596,7 +623,7 @@ var SCBox2dLayer = cc.Layer.extend({
          //this.world.position.Set(2,2);
 
     },
-    /* enable to draw physics shapes on CC2D Canvas. Doesn't work correctly in CC2D currently (cc2D HTML5 2.1)
+    /*enable to draw physics shapes on CC2D Canvas. Doesn't work correctly in CC2D currently (cc2D HTML5 2.1)
     draw:function (ctx) {
     	this.world.DrawDebugData();
         this._super(ctx);
