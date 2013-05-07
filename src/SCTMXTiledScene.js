@@ -39,6 +39,7 @@ var SCTileLayer = cc.Layer.extend({
     	
     	var tileMap = this.loadTileMap();
     	this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
+
     	
        
        // Make the custom web audio synth class

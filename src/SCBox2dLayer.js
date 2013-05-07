@@ -273,12 +273,12 @@ var SCBox2dLayer = cc.Layer.extend({
 			       	bodyDef.userData.ID = this.gameConfig.globals.TAG_BOX2D_STATIC;
 			       	
 			       	if(tileProps && tileProps.note){
-			       		cc.log("SCBox2DLayer makeTiles() note = " + tileProps.note);
+			       		//cc.log("SCBox2DLayer makeTiles() note = " + tileProps.note);
 			       		bodyDef.userData.note = tileProps.note;
 			       		bodyDef.userData.playNote = false;
 			       	}
 			       	if(tileProps && tileProps.goal){
-			       		cc.log("SCBox2DLayer makeTiles() goal = " + tileProps.goal);
+			       		//cc.log("SCBox2DLayer makeTiles() goal = " + tileProps.goal);
 			       		bodyDef.userData.goal = tileProps.goal;
 			       		// used for passing end level message back up out of Box2D. Not a good model, but I gotsta get this done in 48 hours!
 			       		bodyDef.userData.endLevel = false;
@@ -290,6 +290,22 @@ var SCBox2dLayer = cc.Layer.extend({
 		       }
 	        }
         }
+        
+        
+        // Get the object layer objects
+        var objectGroup = map.getObjectLayerProperties("object-layer");
+        
+        // loop through all Objects on the object layer
+        for (var key in objectGroup) {
+		  
+		  // put rules here for thing like:
+		  // if(object.type = "circle") -> make a circle using the properties
+		   var  object = objectGroup[key];
+		   
+		   cc.log(object);
+		   cc.log(object.test);
+		   cc.log(object.number);
+		}
 	    
     },
     

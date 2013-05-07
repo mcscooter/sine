@@ -65,10 +65,18 @@ var SCTileMap = cc.TMXTiledMap.extend({
 	   layer.setTileGID(100, point); // will need to update this to make sure it's not a proper tile or o ver the limit of the sprite sheet
    },
    
-      removeSign:function(point){
+   removeSign:function(point){
 	   var layer = this.getLayer("signs");
 	   layer.setTileGID(100, point);
 	   
+   },
+   
+   getObjectLayerProperties:function(layerName){
+	   // Tiled Map Object Layer
+	   var objectGroup = this.getObjectGroup(layerName).getObjects();
+	   //cc.log(objectGroup);
+	   
+	   return objectGroup;
    }
     
 });
