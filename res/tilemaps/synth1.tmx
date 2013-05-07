@@ -271,5 +271,11 @@
    </properties>
    <ellipse/>
   </object>
+  <object name="Square" type="square" x="32" y="320" width="96" height="96">
+   <properties>
+    <property name="note" value="78"/>
+    <property name="wave" value="sine"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

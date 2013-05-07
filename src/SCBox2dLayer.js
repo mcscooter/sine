@@ -321,7 +321,7 @@ var SCBox2dLayer = cc.Layer.extend({
 		   // if it's a circle, make a circle
 		   if(object && object.type && object.type == "circle"){
 		   		cc.log("Make a circle!!!");
-		   		var circle = new b2CircleShape((object.width / 2) / this.gameConfig.Box2dLayer.PTM_RATIO);
+		   		 var circle = new b2CircleShape((object.width / 2) / this.gameConfig.Box2dLayer.PTM_RATIO);
 			   bodyDef.type = b2Body.b2_staticBody;
 			   fixDef.shape = circle;
 			   
@@ -331,6 +331,23 @@ var SCBox2dLayer = cc.Layer.extend({
 			   //bodyDef.position.Set(4 + this.gameConfig.Box2dLayer.tileBox.center, 4 + this.gameConfig.Box2dLayer.tileBox.center);
 			    
 			   this.world.CreateBody(bodyDef).CreateFixture(fixDef);   	
+			   
+		   }
+		   
+		   if(object && object.type && object.type == "square"){
+			   	cc.log("Make a square!!!");
+		   		var square = new b2PolygonShape;
+			   bodyDef.type = b2Body.b2_staticBody;
+			   fixDef.shape = square;
+			   fixDef.shape.SetAsBox((object.width / 2) / this.gameConfig.Box2dLayer.PTM_RATIO, (object.height / 2) / this.gameConfig.Box2dLayer.PTM_RATIO);
+			   
+			   // Attach body to world
+			   bodyDef.position.Set(object.x / this.gameConfig.Box2dLayer.PTM_RATIO + ((object.width / 2) / this.gameConfig.Box2dLayer.PTM_RATIO), object.y / this.gameConfig.Box2dLayer.PTM_RATIO + ((object.height / 2) / this.gameConfig.Box2dLayer.PTM_RATIO));
+			   
+			   //bodyDef.position.Set(4 + this.gameConfig.Box2dLayer.tileBox.center, 4 + this.gameConfig.Box2dLayer.tileBox.center);
+			    
+			   this.world.CreateBody(bodyDef).CreateFixture(fixDef);   	
+			   
 			   
 		   }
 		}
