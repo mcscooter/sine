@@ -149,6 +149,7 @@
                 <file name="src/SCCamera.js"/>
                 <file name="src/SCPlayerPhysicsComponent.js"/>
                 <file name="src/SCPlayer.js"/>
+                 <file name="src/SCNoteSprite.js"/>
                 <file name="src/SCCar.js"/>
                 <file name="src/SCTMXTiledScene.js"/>
                 <file name="src/SCGameInit.js"/>

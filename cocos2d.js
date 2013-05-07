@@ -60,6 +60,7 @@
             'src/SCCamera.js',
             'src/SCPlayerLogicComponent.js',
             'src/SCPlayer.js',
+            'src/SCNoteSprite.js',
             'src/SCCar.js',
             'src/SCTMXTiledScene.js',
             'src/SCSceneManager.js',

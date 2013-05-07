@@ -36,7 +36,8 @@ var SCBox2dLayer = cc.Layer.extend({
         this.globalMediator = null;   
         this.parentScene = null;  
         this.score = null;
-        this.totalScore = null;   
+        this.totalScore = null; 
+        return this;  
     },
     
     initWithMap:function(map, synth, mediator, scene, score, totalScore){
@@ -143,6 +144,8 @@ var SCBox2dLayer = cc.Layer.extend({
 
         //this.scheduleUpdate();
    
+        	
+        		
         
         cc.log("Box2DTest Finished CTOR");
 
@@ -329,7 +332,66 @@ var SCBox2dLayer = cc.Layer.extend({
 			   bodyDef.position.Set(object.x / this.gameConfig.Box2dLayer.PTM_RATIO + ((object.width / 2) / this.gameConfig.Box2dLayer.PTM_RATIO), object.y / this.gameConfig.Box2dLayer.PTM_RATIO + ((object.height / 2) / this.gameConfig.Box2dLayer.PTM_RATIO));
 			   
 			   //bodyDef.position.Set(4 + this.gameConfig.Box2dLayer.tileBox.center, 4 + this.gameConfig.Box2dLayer.tileBox.center);
+			    var texture = cc.TextureCache.getInstance().addImage(s_Circle);
+			    var circleEntity = new SCNoteSprite(texture, this.gameConfig.player.baseTextureRect); 
+			   	var p = cc.p(object.x, object.y);
+			     p.x = p.x - this.getPosition().x;
+			     p.y = p.y - this.getPosition().y;
+   
+			     circleEntity.setID(987678944545);
+
+			     circleEntity.setPosition(cc.p(p.x, p.y));
+			     cc.log("circleEntity.getContentSize() = " + circleEntity.getContentSize().width);
+			      circleEntity.setScale(object.width / circleEntity.getContentSize().width);
+			     bodyDef.userData = circleEntity;
+			     //circleEntity.runAction(action);
+			     
+			     
+			     //Create an animation with sprite frames and delay
+			   /*  var animation = cc.Animation.create();
+			     animation.setRestoreOriginalFrame(true);
+			     animation.setDelayPerUnit(1);
+			      
+			     var frameName = "res/images/entities/circle/circle-a-1.png";
+			     var frameName2 = "res/images/entities/circle/circle-a-2.png";
+			     animation.addSpriteFrameWithFile(frameName);
+			     animation.addSpriteFrameWithFile(frameName2);
+
+			     var action = cc.Animate.create(animation);
+
+			     //circleEntity.runAction(cc.Sequence.create(action, action.reverse()));
+			     
+			     
+			     
+			     circleEntity.setScale(object.width / circleEntity.getContentSize().width);
+			     bodyDef.userData = circleEntity;
+			     circleEntity.runAction(action);*/
+			     //this.addChild(circleEntity, 1000, circleEntity.getID());
 			    
+			    
+			    
+			    /*
+			    var animation = cc.Animation.create();
+			     var frameName = "res/images/entities/circle/circle-a-1.png";
+			     var frameName2 = "res/images/entities/circle/circle-a-2.png";
+			     animation.addSpriteFrameWithFile(frameName);
+			     animation.addSpriteFrameWithFile(frameName2);
+			     animation.setDelayPerUnit(1);
+			     animation.setRestoreOriginalFrame(true);
+
+			     var action = cc.Animate.create(animation);
+			     //circleEntity.runAction(cc.Sequence.create(action, action.reverse()));
+			     var texture2 = cc.TextureCache.getInstance().addImage(s_Circle);
+			     //var tempSprite = new cc.Sprite(texture2, this.gameConfig.player.baseTextureRect);
+			     tempSprite = new SCEntity(texture2, this.gameConfig.player.baseTextureRect);
+			     
+			     tempSprite.setPosition(cc.p(400,200));
+			     tempSprite.runAction(action);
+			     this.addChild(tempSprite, 1000, 123123);
+*/
+			    
+			    circleEntity.playAnimation();
+			    this.addChild(circleEntity, 1000, circleEntity.getID());
 			   this.world.CreateBody(bodyDef).CreateFixture(fixDef);   	
 			   
 		   }
