@@ -143,10 +143,7 @@ var SCBox2dLayer = cc.Layer.extend({
         */
 
         //this.scheduleUpdate();
-   
-        	
-        		
-        
+
         cc.log("Box2DTest Finished CTOR");
 
     },
@@ -184,22 +181,6 @@ var SCBox2dLayer = cc.Layer.extend({
             , b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
             , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
 	        	 	
-        	
-        // Start creating the tile world rigid bodies
-       /*
-        var fixDef = new b2FixtureDef;
-        fixDef.density = this.gameConfig.Box2dLayer.tileBox.density;
-        fixDef.friction = this.gameConfig.Box2dLayer.tileBox.friction;
-        fixDef.restitution = this.gameConfig.Box2dLayer.tileBox.restitution;
-        */
-/*
-        var bodyDef = new b2BodyDef;
-
-        //create standard tile body
-        bodyDef.type = b2Body.b2_staticBody;
-        fixDef.shape = new b2PolygonShape;
-        fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
-*/
 
         // check draw area for being within the tile map
         if(bottomLeft.x<0){
@@ -342,57 +323,18 @@ var SCBox2dLayer = cc.Layer.extend({
 
 			     circleEntity.setPosition(cc.p(p.x, p.y));
 			     cc.log("circleEntity.getContentSize() = " + circleEntity.getContentSize().width);
-			      circleEntity.setScale(object.width / circleEntity.getContentSize().width);
-			     bodyDef.userData = circleEntity;
-			     //circleEntity.runAction(action);
-			     
-			     
-			     //Create an animation with sprite frames and delay
-			   /*  var animation = cc.Animation.create();
-			     animation.setRestoreOriginalFrame(true);
-			     animation.setDelayPerUnit(1);
-			      
-			     var frameName = "res/images/entities/circle/circle-a-1.png";
-			     var frameName2 = "res/images/entities/circle/circle-a-2.png";
-			     animation.addSpriteFrameWithFile(frameName);
-			     animation.addSpriteFrameWithFile(frameName2);
-
-			     var action = cc.Animate.create(animation);
-
-			     //circleEntity.runAction(cc.Sequence.create(action, action.reverse()));
-			     
-			     
-			     
 			     circleEntity.setScale(object.width / circleEntity.getContentSize().width);
-			     bodyDef.userData = circleEntity;
-			     circleEntity.runAction(action);*/
-			     //this.addChild(circleEntity, 1000, circleEntity.getID());
-			    
-			    
-			    
-			    /*
-			    var animation = cc.Animation.create();
-			     var frameName = "res/images/entities/circle/circle-a-1.png";
-			     var frameName2 = "res/images/entities/circle/circle-a-2.png";
-			     animation.addSpriteFrameWithFile(frameName);
-			     animation.addSpriteFrameWithFile(frameName2);
-			     animation.setDelayPerUnit(1);
-			     animation.setRestoreOriginalFrame(true);
-
-			     var action = cc.Animate.create(animation);
-			     //circleEntity.runAction(cc.Sequence.create(action, action.reverse()));
-			     var texture2 = cc.TextureCache.getInstance().addImage(s_Circle);
-			     //var tempSprite = new cc.Sprite(texture2, this.gameConfig.player.baseTextureRect);
-			     tempSprite = new SCEntity(texture2, this.gameConfig.player.baseTextureRect);
 			     
-			     tempSprite.setPosition(cc.p(400,200));
-			     tempSprite.runAction(action);
-			     this.addChild(tempSprite, 1000, 123123);
-*/
+			     circleEntity.note = object.note;
+			     
+			     circleEntity.type = object.type;
+			     
+			     bodyDef.userData = circleEntity;
+			     
 			    
-			    circleEntity.playAnimation();
+			    //circleEntity.playAnimation();
 			    this.addChild(circleEntity, 1000, circleEntity.getID());
-			   this.world.CreateBody(bodyDef).CreateFixture(fixDef);   	
+			    this.world.CreateBody(bodyDef).CreateFixture(fixDef);   	
 			   
 		   }
 		   
@@ -405,9 +347,29 @@ var SCBox2dLayer = cc.Layer.extend({
 			   
 			   // Attach body to world
 			   bodyDef.position.Set(object.x / this.gameConfig.Box2dLayer.PTM_RATIO + ((object.width / 2) / this.gameConfig.Box2dLayer.PTM_RATIO), object.y / this.gameConfig.Box2dLayer.PTM_RATIO + ((object.height / 2) / this.gameConfig.Box2dLayer.PTM_RATIO));
-			   
-			   //bodyDef.position.Set(4 + this.gameConfig.Box2dLayer.tileBox.center, 4 + this.gameConfig.Box2dLayer.tileBox.center);
 			    
+			    
+			    
+			    var texture = cc.TextureCache.getInstance().addImage(s_Square);
+			   var squareEntity = new SCNoteSprite(texture, this.gameConfig.player.baseTextureRect);
+			   	var p = cc.p(object.x, object.y);
+			     p.x = p.x - this.getPosition().x;
+			     p.y = p.y - this.getPosition().y;
+   
+			     squareEntity.setID(987678944534);
+
+			     squareEntity.setPosition(cc.p(p.x, p.y));
+			     
+			     squareEntity.setScale(object.width / squareEntity.getContentSize().width);
+			     
+			     squareEntity.note = object.note;
+			     
+			     squareEntity.type = object.type;
+			     
+			     bodyDef.userData = squareEntity;
+			     
+			     //squareEntity.playAnimation();
+			    this.addChild(squareEntity, 1000, circleEntity.getID());
 			   this.world.CreateBody(bodyDef).CreateFixture(fixDef);   	
 			   
 			   
@@ -418,7 +380,7 @@ var SCBox2dLayer = cc.Layer.extend({
     
 
     addNewSpriteWithCoords:function (p) {
-        //UXLog(L"Add sprite %0.2f x %02.f",p.x,p.y);
+    
         var batch = this.getChildByTag(TAG_SPRITE_MANAGER);
         // correct for world movement
         p.x = p.x - this.getPosition().x;
@@ -462,20 +424,10 @@ var SCBox2dLayer = cc.Layer.extend({
     },
     
         addNewEntity:function (p, newEntity) {
-        //UXLog(L"Add sprite %0.2f x %02.f",p.x,p.y);
-        //var batch = this.getChildByTag(TAG_SPRITE_MANAGER);
+
         // correct for world movement
         p.x = p.x - this.getPosition().x;
         p.y = p.y - this.getPosition().y;
-        //cc.log("addNewSpriteWithCoordsNew:function (p) p.x/y = " + p.x + " " + p.y);
-        //We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
-        //just randomly picking one of the images
-        //var idx = (Math.random() > .5 ? 0 : 1);
-        //var idy = (Math.random() > .5 ? 0 : 1);
-        //var sprite = cc.Sprite.createWithTexture(batch.getTexture(), cc.rect(32 * idx, 32 * idy, 32, 32));
-        // scott, trying to add a name fo ID
-        //sprite.SCName = "testName from Scott";
-        //batch.addChild(sprite);
 
         newEntity.setPosition(cc.p(p.x, p.y));
         this.addChild(newEntity, 1000, newEntity.getID());
@@ -495,15 +447,11 @@ var SCBox2dLayer = cc.Layer.extend({
         var body = this.world.CreateBody(bodyDef);
 
         // Define another box shape for our dynamic body.
-       // var dynamicBox = new b2PolygonShape();
-        //dynamicBox.SetAsBox(0.5, 0.5);//These are mid points for our 1m box
         var dynamicCircle = new b2CircleShape(.4);
-       // dynamicCircle.SetAsCircle(0.5, 0.5);
 
         // Define the dynamic body fixture.
         var fixtureDef = new b2FixtureDef();
-       // fixtureDef.shape = dynamicBox;
-       fixtureDef.shape = dynamicCircle;
+        fixtureDef.shape = dynamicCircle;
         fixtureDef.density = 0.1;
         fixtureDef.friction = 0.1;
         fixtureDef.restitution = .98;
@@ -642,6 +590,10 @@ var SCBox2dLayer = cc.Layer.extend({
 	                myActor.playNote = false;
 	                this.score.incrementScore();
 	                this.totalScore.incrementScore();
+	                if(myActor.type == "circle" || myActor.type == "square"){
+	                	myActor.playAnimation();
+	                }
+	                
                 }
                 
                 if(myActor.endLevel){
@@ -651,44 +603,7 @@ var SCBox2dLayer = cc.Layer.extend({
                 // if it is the player -- needs to be moved to player entity
                 if(myActor.ID && myActor.ID == this.gameConfig.globals.TAG_PLAYER){
                 	
-                	/*
-                	
-                	b.SetAwake(true);
-                	b.SetAngle(0);
-                	b.SetAngularVelocity(0);
-                	
-                	if(myActor.state && myActor.state.movementDirection){
-                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection = " + myActor.state.movementDirection);
-                		if(myActor.state.movementDirection == "up"){
-	                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"up\"");
-	                		var force = new b2Vec2(0,10);
-	                		b.SetAwake(true);
-	                		b.SetLinearVelocity(force);
-	                	
-	                	}
-	                	if(myActor.state.movementDirection == "right"){
-	                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"right\"");
-	                		var force = new b2Vec2(10,0);
-	                		b.SetAwake(true);
-	                		b.SetLinearVelocity(force);
-	                	
-	                	}
-	                	if(myActor.state.movementDirection == "left"){
-	                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"left\"");
-	                		var force = new b2Vec2(-10,0);
-	                		b.SetAwake(true);
-	                		b.SetLinearVelocity(force);
-	                	
-	                	}
-	                	if(myActor.state.movementDirection == "down"){
-	                		//cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"down\"");
-	                		var force = new b2Vec2(0,-10);
-	                		b.SetAwake(true);
-	                		b.SetLinearVelocity(force);
-	                	
-	                	}
-	                	
-	                }*/
+             
 	             }
 	            myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
                 myActor.setRotation(-1 * cc.RADIANS_TO_DEGREES(b.GetAngle()));
@@ -712,12 +627,6 @@ var SCBox2dLayer = cc.Layer.extend({
     endLevel:function(){
 	    cc.log("SCBox2DLayer endLevel()");
 	       	var args = new Object();
-	  		//var event = new SCEvent(this.gameConfig.globals.MSG_END_LEVEL, this, args);
-	  		//this.globalMediator.send(event);
-	  		//this.parentScene.endLevel(args);
-	  		//this.synth.destroy();
-	  		
-	  		//this.parentScene.endLevel(args);
 	  		
 	  		for (var b = this.world.GetBodyList(); b; b = b.GetNext()) {
 	  			var myActor = b.GetUserData();

@@ -21,6 +21,8 @@ var s_CircleA5 = "res/images/entities/circle/circle-a-5.png";
 var s_CircleA6 = "res/images/entities/circle/circle-a-6.png";
 var s_CircleA7 = "res/images/entities/circle/circle-a-7.png";
 
+var s_Square = "res/images/entities/square/yellow.jpg";
+
 var s_GreenCarRight = "res/images/entities/green-car-right.png";
 var s_GreenCarLeft = "res/images/entities/green-car-left.png";
 var s_GreenCarUp = "res/images/entities/green-car-up.png";
@@ -68,6 +70,7 @@ var g_ressources = [
     {type:"image", src:s_CircleA5},
     {type:"image", src:s_CircleA6},
     {type:"image", src:s_CircleA7},
+    {type:"image", src:s_Square},
     {type:"image", src:s_GreenCarRight},
     {type:"image", src:s_GreenCarLeft},
     {type:"image", src:s_GreenCarUp},
