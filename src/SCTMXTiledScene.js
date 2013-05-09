@@ -20,6 +20,10 @@ var SCTileLayer = cc.Layer.extend({
     	this._super();
     	// gets the size of the game. In points, not pixels.
     	var s = cc.Director.getInstance().getWinSize();
+    	
+    	var cache = cc.SpriteFrameCache.getInstance();
+        cache.addSpriteFrames("res/images/entities/circle/circle.plist", "res/images/entities/circle/circle.png");
+        //cache.addSpriteFrames("res/images/entities/circle/circle.plist", s_CircleSheet);
     	    	
     	// set up the listener and messaging mediator
        	this.mediator = new SCMediator();

@@ -5,6 +5,8 @@ var SCNoteSprite = SCEntity.extend({
    ctor:function (filename) {
    		this._super(filename);
    		this.gameConfig = new SCGameConfig();
+   		this.animation = null;
+   		this.animationAction = null;
     	return this;
    },
    
@@ -17,9 +19,31 @@ var SCNoteSprite = SCEntity.extend({
    draw:function (){
    		this._super();
    },
+   
+   // create one set of animation to play for the Entity to play
+   makeAnimations:function(animType){
+	   	
+
+        var frameName1 = cc.SpriteFrameCache.getInstance().getSpriteFrame("circle-a-1.png");
+        var frameName2 = cc.SpriteFrameCache.getInstance().getSpriteFrame("circle-a-2.png");
+        
+        this.animation = cc.Animation.create();
+        this.animation.addSpriteFrame(frameName1);
+	   	this.animation.addSpriteFrame(frameName2);
+	   	
+	   	this.animation.setDelayPerUnit(.03);
+	   	this.animation.setRestoreOriginalFrame(true);
+	   	this.action = cc.Animate.create(this.animation);
+	   	//var texture2 = cc.TextureCache.getInstance().addImage(s_Circle);
+
+	   	//this.runAction(this.action);
+
+   },
+   
 
 
    playAnimation:function(){
+	   	 /*
 	   	  var animation = cc.Animation.create();
 	   	  var frameName1 = "res/images/entities/circle/circle-a-1.png";
 	   	  var frameName2 = "res/images/entities/circle/circle-a-2.png";
@@ -40,8 +64,8 @@ var SCNoteSprite = SCEntity.extend({
 	   	  animation.setRestoreOriginalFrame(true);
 	   	  var action = cc.Animate.create(animation);
 	   	  var texture2 = cc.TextureCache.getInstance().addImage(s_Circle);
-
-	   	  this.runAction(action);
+	   	  */
+	   	  this.runAction(this.action);
    }
    
     

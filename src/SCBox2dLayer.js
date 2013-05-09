@@ -325,6 +325,8 @@ var SCBox2dLayer = cc.Layer.extend({
 			     cc.log("circleEntity.getContentSize() = " + circleEntity.getContentSize().width);
 			     circleEntity.setScale(object.width / circleEntity.getContentSize().width);
 			     
+			     circleEntity.makeAnimations();
+			     
 			     circleEntity.note = object.note;
 			     
 			     circleEntity.type = object.type;
@@ -361,6 +363,8 @@ var SCBox2dLayer = cc.Layer.extend({
 			     squareEntity.setPosition(cc.p(p.x, p.y));
 			     
 			     squareEntity.setScale(object.width / squareEntity.getContentSize().width);
+			     
+			     squareEntity.makeAnimations();
 			     
 			     squareEntity.note = object.note;
 			     

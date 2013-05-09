@@ -12,7 +12,7 @@ var s_CarDown = "res/images/car-down.png";
 
 var s_Ball = "res/images/entities/ball.png";
 
-var s_Circle = "res/images/entities/circle/circle.png";
+var s_Circle = "res/images/entities/circle/circle2.png";
 var s_CircleA1 = "res/images/entities/circle/circle-a-1.png";
 var s_CircleA2 = "res/images/entities/circle/circle-a-2.png";
 var s_CircleA3 = "res/images/entities/circle/circle-a-3.png";
@@ -20,6 +20,10 @@ var s_CircleA4 = "res/images/entities/circle/circle-a-4.png";
 var s_CircleA5 = "res/images/entities/circle/circle-a-5.png";
 var s_CircleA6 = "res/images/entities/circle/circle-a-6.png";
 var s_CircleA7 = "res/images/entities/circle/circle-a-7.png";
+
+//var s_CirclePlist = "res/images/entities/circle/circle.plist";
+var s_CircleSheet = "res/images/entities/circle/circle.png";
+
 
 var s_Square = "res/images/entities/square/yellow.jpg";
 
@@ -70,6 +74,7 @@ var g_ressources = [
     {type:"image", src:s_CircleA5},
     {type:"image", src:s_CircleA6},
     {type:"image", src:s_CircleA7},
+    {type:"image", src:s_CircleSheet},
     {type:"image", src:s_Square},
     {type:"image", src:s_GreenCarRight},
     {type:"image", src:s_GreenCarLeft},
@@ -92,7 +97,7 @@ var g_ressources = [
     
 
     //plist
-
+    {type:"plist", src:"res/images/entities/circle/circle.plist"},
     //fnt
 
     //tmx
