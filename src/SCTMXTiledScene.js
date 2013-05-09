@@ -21,9 +21,10 @@ var SCTileLayer = cc.Layer.extend({
     	// gets the size of the game. In points, not pixels.
     	var s = cc.Director.getInstance().getWinSize();
     	
-    	var cache = cc.SpriteFrameCache.getInstance();
-        cache.addSpriteFrames("res/images/entities/circle/circle.plist", "res/images/entities/circle/circle.png");
-        //cache.addSpriteFrames("res/images/entities/circle/circle.plist", s_CircleSheet);
+    	// For a shared sprite sheet for animation of circle. Problem is it causes a hang in the whole game most of the time :(
+    	//var cache = cc.SpriteFrameCache.getInstance();
+        //cache.addSpriteFrames("res/images/entities/circle/circle.plist", "res/images/entities/circle/circle.png");
+        
     	    	
     	// set up the listener and messaging mediator
        	this.mediator = new SCMediator();
